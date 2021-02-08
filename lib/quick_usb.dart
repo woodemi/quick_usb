@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:quick_usb/src/quick_usb_android.dart';
+import 'package:quick_usb/src/quick_usb_macos.dart';
 import 'package:quick_usb/src/quick_usb_platform_interface.dart';
 import 'package:quick_usb/src/quick_usb_windows.dart';
 
@@ -17,6 +18,8 @@ QuickUsbPlatform get _platform {
       QuickUsbPlatform.instance = QuickUsbAndroid();
     } else if (Platform.isWindows) {
       QuickUsbPlatform.instance = QuickUsbWindows();
+    } else if (Platform.isMacOS) {
+      QuickUsbPlatform.instance = QuickUsbMacos();
     }
     _manualDartRegistrationNeeded = false;
   }
