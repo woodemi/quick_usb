@@ -1,12 +1,31 @@
-import 'dart:async';
+import 'dart:io';
 
-import 'package:flutter/services.dart';
+import 'package:quick_usb/src/quick_usb_android.dart';
+import 'package:quick_usb/src/quick_usb_platform_interface.dart';
+import 'package:quick_usb/src/quick_usb_windows.dart';
+
+bool _manualDartRegistrationNeeded = true;
+
+QuickUsbPlatform get _platform {
+  // This is to manually endorse Dart implementations until automatic
+  // registration of Dart plugins is implemented. For details see
+  // https://github.com/flutter/flutter/issues/52267.
+  if (_manualDartRegistrationNeeded) {
+    // Only do the initial registration if it hasn't already been overridden
+    // with a non-default instance.
+    if (Platform.isAndroid) {
+      QuickUsbPlatform.instance = QuickUsbAndroid();
+    } else if (Platform.isWindows) {
+      QuickUsbPlatform.instance = QuickUsbWindows();
+    }
+    _manualDartRegistrationNeeded = false;
+  }
+
+  return QuickUsbPlatform.instance;
+}
 
 class QuickUsb {
-  static const MethodChannel _channel = const MethodChannel('quick_usb');
-
   static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
+    return _platform.platformVersion;
   }
 }
