@@ -5,7 +5,7 @@ import 'package:libusb/libusb64.dart';
 import 'quick_usb_platform_interface.dart';
 
 class QuickUsbWindows extends _QuickUsbDesktop {
-  QuickUsbWindows() : super(null);
+  QuickUsbWindows() : super(DynamicLibrary.open('libusb-1.0.23.dll'));
 }
 
 class QuickUsbMacos extends _QuickUsbDesktop {
