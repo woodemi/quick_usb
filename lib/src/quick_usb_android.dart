@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:quick_usb/src/common.dart';
 import 'package:quick_usb/src/quick_usb_platform_interface.dart';
 
 class QuickUsbAndroid extends QuickUsbPlatform {
@@ -14,5 +15,12 @@ class QuickUsbAndroid extends QuickUsbPlatform {
   @override
   Future<void> exit() async {
     return;
+  }
+
+  @override
+  Future<List<UsbDevice>> getDeviceList() async {
+    List<Map<dynamic, dynamic>> list =
+        await _channel.invokeListMethod('getDeviceList');
+    return list.map((e) => UsbDevice.fromMap(e)).toList();
   }
 }

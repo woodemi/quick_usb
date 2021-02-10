@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'src/common.dart';
 import 'src/quick_usb_android.dart';
 import 'src/quick_usb_desktop.dart';
 import 'src/quick_usb_platform_interface.dart';
@@ -32,4 +33,6 @@ class QuickUsb {
   static Future<bool> init() => _platform.init();
 
   static Future<void> exit() => _platform.exit();
+
+  static Future<List<UsbDevice>> getDeviceList() => _platform.getDeviceList();
 }
