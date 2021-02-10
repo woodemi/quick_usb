@@ -1,10 +1,8 @@
 import 'dart:io';
 
-import 'package:quick_usb/src/quick_usb_android.dart';
-import 'package:quick_usb/src/quick_usb_linux.dart';
-import 'package:quick_usb/src/quick_usb_macos.dart';
-import 'package:quick_usb/src/quick_usb_platform_interface.dart';
-import 'package:quick_usb/src/quick_usb_windows.dart';
+import 'src/quick_usb_android.dart';
+import 'src/quick_usb_desktop.dart';
+import 'src/quick_usb_platform_interface.dart';
 
 bool _manualDartRegistrationNeeded = true;
 
@@ -31,7 +29,7 @@ QuickUsbPlatform get _platform {
 }
 
 class QuickUsb {
-  static Future<String> get platformVersion async {
-    return _platform.platformVersion;
-  }
+  static Future<bool> init() => _platform.init();
+
+  static Future<void> exit() => _platform.exit();
 }

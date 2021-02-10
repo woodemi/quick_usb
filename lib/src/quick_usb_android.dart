@@ -7,8 +7,12 @@ class QuickUsbAndroid extends QuickUsbPlatform {
   static const MethodChannel _channel = const MethodChannel('quick_usb');
 
   @override
-  Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
+  Future<bool> init() async {
+    return true;
+  }
+
+  @override
+  Future<void> exit() async {
+    return;
   }
 }
