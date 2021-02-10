@@ -19,5 +19,7 @@ abstract class QuickUsbPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String> get platformVersion;
+  Future<bool> init();
+
+  Future<void> exit();
 }

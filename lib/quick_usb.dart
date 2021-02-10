@@ -29,7 +29,7 @@ QuickUsbPlatform get _platform {
 }
 
 class QuickUsb {
-  static Future<String> get platformVersion async {
-    return _platform.platformVersion;
-  }
+  static Future<bool> init() => _platform.init();
+
+  static Future<void> exit() => _platform.exit();
 }

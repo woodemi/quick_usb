@@ -8,8 +8,14 @@ class QuickUsbLinux extends _QuickUsbDesktop {}
 
 class _QuickUsbDesktop extends QuickUsbPlatform {
   @override
-  Future<String> get platformVersion {
-    // TODO: implement platformVersion
+  Future<bool> init() {
+    // TODO: implement init
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> exit() {
+    // TODO: implement exit
     throw UnimplementedError();
   }
 }
