@@ -1,10 +1,8 @@
 import 'dart:io';
 
-import 'package:quick_usb/src/quick_usb_android.dart';
-import 'package:quick_usb/src/quick_usb_linux.dart';
-import 'package:quick_usb/src/quick_usb_macos.dart';
-import 'package:quick_usb/src/quick_usb_platform_interface.dart';
-import 'package:quick_usb/src/quick_usb_windows.dart';
+import 'src/quick_usb_android.dart';
+import 'src/quick_usb_desktop.dart';
+import 'src/quick_usb_platform_interface.dart';
 
 bool _manualDartRegistrationNeeded = true;
 
