@@ -13,7 +13,7 @@ class QuickUsbMacos extends _QuickUsbDesktop {
 }
 
 class QuickUsbLinux extends _QuickUsbDesktop {
-  QuickUsbLinux() : super(null);
+  QuickUsbLinux() : super(DynamicLibrary.open('libusb-1.0.23.so'));
 }
 
 class _QuickUsbDesktop extends QuickUsbPlatform {
