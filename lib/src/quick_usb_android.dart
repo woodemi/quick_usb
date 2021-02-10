@@ -18,8 +18,9 @@ class QuickUsbAndroid extends QuickUsbPlatform {
   }
 
   @override
-  Future<List<UsbDevice>> getDeviceList() {
-    // TODO: implement getDeviceList
-    throw UnimplementedError();
+  Future<List<UsbDevice>> getDeviceList() async {
+    List<Map<dynamic, dynamic>> list =
+        await _channel.invokeListMethod('getDeviceList');
+    return list.map((e) => UsbDevice.fromMap(e)).toList();
   }
 }
