@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp> {
     return Column(
       children: [
         _init_exit(),
+        _getDeviceList(),
       ],
     );
   }
@@ -52,6 +53,16 @@ class _MyAppState extends State<MyApp> {
           },
         ),
       ],
+    );
+  }
+
+  Widget _getDeviceList() {
+    return RaisedButton(
+      child: Text('getDeviceList'),
+      onPressed: () async {
+        var deviceList = await QuickUsb.getDeviceList();
+        print('deviceList $deviceList');
+      },
     );
   }
 }

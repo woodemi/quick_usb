@@ -1,4 +1,5 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:quick_usb/src/common.dart';
 
 abstract class QuickUsbPlatform extends PlatformInterface {
   QuickUsbPlatform() : super(token: _token);
@@ -22,4 +23,6 @@ abstract class QuickUsbPlatform extends PlatformInterface {
   Future<bool> init();
 
   Future<void> exit();
+
+  Future<List<UsbDevice>> getDeviceList();
 }

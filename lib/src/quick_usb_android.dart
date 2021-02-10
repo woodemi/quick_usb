@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:quick_usb/src/common.dart';
 import 'package:quick_usb/src/quick_usb_platform_interface.dart';
 
 class QuickUsbAndroid extends QuickUsbPlatform {
@@ -14,5 +15,11 @@ class QuickUsbAndroid extends QuickUsbPlatform {
   @override
   Future<void> exit() async {
     return;
+  }
+
+  @override
+  Future<List<UsbDevice>> getDeviceList() {
+    // TODO: implement getDeviceList
+    throw UnimplementedError();
   }
 }

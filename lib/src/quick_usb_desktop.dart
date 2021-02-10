@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:libusb/libusb64.dart';
+import 'package:quick_usb/src/common.dart';
 
 import 'quick_usb_platform_interface.dart';
 
@@ -30,5 +31,11 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
   @override
   Future<void> exit() async {
     return _libusb.libusb_exit(nullptr);
+  }
+
+  @override
+  Future<List<UsbDevice>> getDeviceList() {
+    // TODO: implement getDeviceList
+    throw UnimplementedError();
   }
 }
