@@ -23,4 +23,24 @@ class QuickUsbAndroid extends QuickUsbPlatform {
         await _channel.invokeListMethod('getDeviceList');
     return list.map((e) => UsbDevice.fromMap(e)).toList();
   }
+
+  @override
+  Future<bool> hasPermission(UsbDevice usbDevice) {
+    return _channel.invokeMethod('hasPermission', usbDevice.toMap());
+  }
+
+  @override
+  Future<void> requestPermission(UsbDevice usbDevice) {
+    return _channel.invokeMethod('requestPermission', usbDevice.toMap());
+  }
+
+  @override
+  Future<bool> openDevice(UsbDevice usbDevice) {
+    return _channel.invokeMethod('openDevice', usbDevice.toMap());
+  }
+
+  @override
+  Future<void> closeDevice(UsbDevice usbDevice) {
+    return _channel.invokeMethod('closeDevice', usbDevice.toMap());
+  }
 }

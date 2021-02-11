@@ -30,6 +30,8 @@ class _MyAppState extends State<MyApp> {
       children: [
         _init_exit(),
         _getDeviceList(),
+        _has_request(),
+        _open_close(),
       ],
     );
   }
@@ -56,13 +58,59 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  List<UsbDevice> _deviceList;
+
   Widget _getDeviceList() {
     return RaisedButton(
       child: Text('getDeviceList'),
       onPressed: () async {
-        var deviceList = await QuickUsb.getDeviceList();
-        print('deviceList $deviceList');
+        _deviceList = await QuickUsb.getDeviceList();
+        print('deviceList $_deviceList');
       },
+    );
+  }
+
+  Widget _has_request() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        RaisedButton(
+          child: Text('hasPermission'),
+          onPressed: () async {
+            var hasPermission = await QuickUsb.hasPermission(_deviceList.first);
+            print('hasPermission $hasPermission');
+          },
+        ),
+        RaisedButton(
+          child: Text('requestPermission'),
+          onPressed: () async {
+            await QuickUsb.requestPermission(_deviceList.first);
+            print('requestPermission');
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _open_close() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        RaisedButton(
+          child: Text('openDevice'),
+          onPressed: () async {
+            var openDevice = await QuickUsb.openDevice(_deviceList.first);
+            print('openDevice $openDevice');
+          },
+        ),
+        RaisedButton(
+          child: Text('closeDevice'),
+          onPressed: () async {
+            await QuickUsb.closeDevice(_deviceList.first);
+            print('closeDevice');
+          },
+        ),
+      ],
     );
   }
 }

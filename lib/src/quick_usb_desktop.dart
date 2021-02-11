@@ -76,4 +76,26 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
 
     ffi.free(descPtr);
   }
+
+  @override
+  Future<bool> hasPermission(UsbDevice usbDevice) async {
+    return true;
+  }
+
+  @override
+  Future<void> requestPermission(UsbDevice usbDevice) async {
+    return;
+  }
+
+  @override
+  Future<bool> openDevice(UsbDevice usbDevice) {
+    // TODO: implement openDevice
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> closeDevice(UsbDevice usbDevice) {
+    // TODO: implement closeDevice
+    throw UnimplementedError();
+  }
 }
