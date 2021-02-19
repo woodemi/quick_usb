@@ -49,4 +49,10 @@ class QuickUsb {
 
   static Future<void> closeDevice(UsbDevice usbDevice) =>
       _platform.closeDevice(usbDevice);
+
+  static Future<UsbConfiguration> getConfiguration(int index) =>
+      _platform.getConfiguration(index);
+
+  static Future<bool> setConfiguration(UsbConfiguration config) =>
+      _platform.setConfiguration(config);
 }
