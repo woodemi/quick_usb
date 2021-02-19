@@ -20,6 +20,7 @@ class QuickUsbLinux extends _QuickUsbDesktop {
 
 class _QuickUsbDesktop extends QuickUsbPlatform {
   final Libusb _libusb;
+  Pointer<libusb_device_handle> _devHandle;
 
   _QuickUsbDesktop(DynamicLibrary dynamicLibrary)
       : _libusb = Libusb(dynamicLibrary);
@@ -75,5 +76,35 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
     }
 
     ffi.free(descPtr);
+  }
+
+  @override
+  Future<bool> hasPermission(UsbDevice usbDevice) async {
+    return true;
+  }
+
+  @override
+  Future<void> requestPermission(UsbDevice usbDevice) async {
+    return;
+  }
+
+  @override
+  Future<bool> openDevice(UsbDevice usbDevice) async {
+    assert(_devHandle == null, 'Last device not closed');
+
+    var handle = _libusb.libusb_open_device_with_vid_pid(
+        nullptr, usbDevice.vendorId, usbDevice.productId);
+    if (handle == nullptr) {
+      return false;
+    }
+    _devHandle = handle;
+    return true;
+  }
+
+  @override
+  Future<void> closeDevice(UsbDevice usbDevice) async {
+    assert(_devHandle != null, 'Last device not opened');
+
+    _libusb.libusb_close(_devHandle);
   }
 }
