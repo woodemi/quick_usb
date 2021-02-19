@@ -43,4 +43,17 @@ class QuickUsbAndroid extends QuickUsbPlatform {
   Future<void> closeDevice(UsbDevice usbDevice) {
     return _channel.invokeMethod('closeDevice', usbDevice.toMap());
   }
+
+  @override
+  Future<UsbConfiguration> getConfiguration(int index) async {
+    var map = await _channel.invokeMethod('getConfiguration', {
+      'index': index,
+    });
+    return UsbConfiguration.fromMap(map);
+  }
+
+  @override
+  Future<bool> setConfiguration(UsbConfiguration config) {
+    return _channel.invokeMethod('setConfiguration', config.toMap());
+  }
 }

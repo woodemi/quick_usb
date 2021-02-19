@@ -43,6 +43,7 @@ class QuickUsbPlugin : FlutterPlugin, MethodCallHandler {
     applicationContext = null
   }
 
+  private var usbDevice: UsbDevice? = null
   private var usbDeviceConnection: UsbDeviceConnection? = null
 
   private val receiver = object : BroadcastReceiver() {
@@ -64,7 +65,8 @@ class QuickUsbPlugin : FlutterPlugin, MethodCallHandler {
           mapOf(
                   "identifier" to it.key,
                   "vendorId" to it.value.vendorId,
-                  "productId" to it.value.productId
+                  "productId" to it.value.productId,
+                  "configurationCount" to it.value.configurationCount
           )
         }
         result.success(usbDeviceList)
@@ -89,13 +91,32 @@ class QuickUsbPlugin : FlutterPlugin, MethodCallHandler {
       "openDevice" -> {
         val manager = usbManager ?: return result.error("IllegalState", "usbManager null", null)
         val identifier = call.argument<String>("identifier")
-        val device = manager.deviceList[identifier]
-        usbDeviceConnection = manager.openDevice(device)
-        result.success(null)
+        usbDevice = manager.deviceList[identifier]
+        usbDeviceConnection = manager.openDevice(usbDevice)
+        result.success(true)
       }
       "closeDevice" -> {
         usbDeviceConnection?.close()
+        usbDeviceConnection = null
+        usbDevice = null
         result.success(null)
+      }
+      "getConfiguration" -> {
+        val device = usbDevice ?: return result.error("IllegalState", "usbDevice null", null)
+        val index = call.argument<Int>("index")!!
+        val configuration = device.getConfiguration(index)
+        result.success(mapOf(
+                "id" to configuration.id,
+                "index" to index,
+                "interfaceCount" to configuration.interfaceCount
+        ))
+      }
+      "setConfiguration" -> {
+        val device = usbDevice ?: return result.error("IllegalState", "usbDevice null", null)
+        val connection = usbDeviceConnection ?: return result.error("IllegalState", "usbDeviceConnection null", null)
+        val index = call.argument<Int>("index")!!
+        val configuration = device.getConfiguration(index)
+        result.success(connection.setConfiguration(configuration))
       }
       else -> result.notImplemented()
     }
