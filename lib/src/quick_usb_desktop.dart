@@ -1,30 +1,35 @@
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart' as ffi;
+import 'package:flutter/foundation.dart';
 import 'package:libusb/libusb64.dart';
 import 'package:quick_usb/src/common.dart';
 
 import 'quick_usb_platform_interface.dart';
 import 'utils.dart';
 
+Libusb _libusb;
+
 class QuickUsbWindows extends _QuickUsbDesktop {
-  QuickUsbWindows() : super(DynamicLibrary.open('libusb-1.0.23.dll'));
+  QuickUsbWindows() {
+    _libusb = Libusb(DynamicLibrary.open('libusb-1.0.23.dll'));
+  }
 }
 
 class QuickUsbMacos extends _QuickUsbDesktop {
-  QuickUsbMacos() : super(DynamicLibrary.open('libusb-1.0.23.dylib'));
+  QuickUsbMacos() {
+    _libusb = Libusb(DynamicLibrary.open('libusb-1.0.23.dylib'));
+  }
 }
 
 class QuickUsbLinux extends _QuickUsbDesktop {
-  QuickUsbLinux() : super(DynamicLibrary.open('libusb-1.0.23.so'));
+  QuickUsbLinux() {
+    _libusb = Libusb(DynamicLibrary.open('libusb-1.0.23.so'));
+  }
 }
 
 class _QuickUsbDesktop extends QuickUsbPlatform {
-  final Libusb _libusb;
   Pointer<libusb_device_handle> _devHandle;
-
-  _QuickUsbDesktop(DynamicLibrary dynamicLibrary)
-      : _libusb = Libusb(dynamicLibrary);
 
   @override
   Future<bool> init() async {
@@ -121,7 +126,7 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
       }
 
       var configDescPtr = configDescPtrPtr.value;
-      var usbConfiguration = UsbConfiguration(
+      var usbConfiguration = _UsbConfigurationDesktop(
         id: configDescPtr.ref.bConfigurationValue,
         index: configDescPtr.ref.iConfiguration,
         interfaceCount: configDescPtr.ref.bNumInterfaces,
@@ -144,5 +149,35 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
       return false;
     }
     return true;
+  }
+
+  @override
+  Future<bool> claimInterface(UsbInterface intf) {
+    // TODO: implement claimInterface
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> releaseInterface(UsbInterface intf) {
+    // TODO: implement releaseInterface
+    throw UnimplementedError();
+  }
+}
+
+class _UsbConfigurationDesktop extends UsbConfiguration {
+  _UsbConfigurationDesktop({
+    @required id,
+    @required index,
+    @required interfaceCount,
+  }) : super(
+          id: id,
+          index: index,
+          interfaceCount: interfaceCount,
+        );
+
+  @override
+  Future<UsbInterface> getInterface(int index) async {
+    // TODO: implement getInterface
+    throw UnimplementedError();
   }
 }

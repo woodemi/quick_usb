@@ -55,4 +55,10 @@ class QuickUsb {
 
   static Future<bool> setConfiguration(UsbConfiguration config) =>
       _platform.setConfiguration(config);
+
+  static Future<bool> claimInterface(UsbInterface intf) =>
+      _platform.claimInterface(intf);
+
+  static Future<bool> releaseInterface(UsbInterface intf) =>
+      _platform.releaseInterface(intf);
 }

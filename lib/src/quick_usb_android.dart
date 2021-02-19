@@ -1,12 +1,13 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:quick_usb/src/common.dart';
 import 'package:quick_usb/src/quick_usb_platform_interface.dart';
 
-class QuickUsbAndroid extends QuickUsbPlatform {
-  static const MethodChannel _channel = const MethodChannel('quick_usb');
+const MethodChannel _channel = const MethodChannel('quick_usb');
 
+class QuickUsbAndroid extends QuickUsbPlatform {
   @override
   Future<bool> init() async {
     return true;
@@ -49,11 +50,49 @@ class QuickUsbAndroid extends QuickUsbPlatform {
     var map = await _channel.invokeMethod('getConfiguration', {
       'index': index,
     });
-    return UsbConfiguration.fromMap(map);
+    return _UsbConfigurationAndroid.fromMap(map);
   }
 
   @override
   Future<bool> setConfiguration(UsbConfiguration config) {
     return _channel.invokeMethod('setConfiguration', config.toMap());
+  }
+
+  @override
+  Future<bool> claimInterface(UsbInterface intf) {
+    // TODO: implement claimInterface
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> releaseInterface(UsbInterface intf) {
+    // TODO: implement releaseInterface
+    throw UnimplementedError();
+  }
+}
+
+class _UsbConfigurationAndroid extends UsbConfiguration {
+  _UsbConfigurationAndroid({
+    @required id,
+    @required index,
+    @required interfaceCount,
+  }) : super(
+          id: id,
+          index: index,
+          interfaceCount: interfaceCount,
+        );
+
+  factory _UsbConfigurationAndroid.fromMap(Map<dynamic, dynamic> map) {
+    return _UsbConfigurationAndroid(
+      id: map['id'],
+      index: map['index'],
+      interfaceCount: map['interfaceCount'],
+    );
+  }
+
+  @override
+  Future<UsbInterface> getInterface(int index) {
+    // TODO: implement getInterface
+    throw UnimplementedError();
   }
 }

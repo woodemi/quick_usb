@@ -35,7 +35,7 @@ class UsbDevice {
   String toString() => toMap().toString();
 }
 
-class UsbConfiguration {
+abstract class UsbConfiguration {
   final int id;
   final int index;
   final int interfaceCount;
@@ -45,14 +45,6 @@ class UsbConfiguration {
     @required this.index,
     @required this.interfaceCount,
   });
-
-  factory UsbConfiguration.fromMap(Map<dynamic, dynamic> map) {
-    return UsbConfiguration(
-      id: map['id'],
-      index: map['index'],
-      interfaceCount: map['interfaceCount'],
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -64,4 +56,8 @@ class UsbConfiguration {
 
   @override
   String toString() => toMap().toString();
+
+  Future<UsbInterface> getInterface(int index);
 }
+
+class UsbInterface {}
