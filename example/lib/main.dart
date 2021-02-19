@@ -32,6 +32,7 @@ class _MyAppState extends State<MyApp> {
         _getDeviceList(),
         _has_request(),
         _open_close(),
+        _get_set_configuration(),
       ],
     );
   }
@@ -108,6 +109,31 @@ class _MyAppState extends State<MyApp> {
           onPressed: () async {
             await QuickUsb.closeDevice(_deviceList.first);
             print('closeDevice');
+          },
+        ),
+      ],
+    );
+  }
+
+  UsbConfiguration _configuration;
+
+  Widget _get_set_configuration() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        RaisedButton(
+          child: Text('getConfiguration'),
+          onPressed: () async {
+            _configuration = await QuickUsb.getConfiguration(0);
+            print('getConfiguration $_configuration');
+          },
+        ),
+        RaisedButton(
+          child: Text('setConfiguration'),
+          onPressed: () async {
+            var getConfiguration =
+                await QuickUsb.setConfiguration(_configuration);
+            print('setConfiguration $getConfiguration');
           },
         ),
       ],
