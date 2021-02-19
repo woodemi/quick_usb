@@ -5,6 +5,7 @@ import 'package:libusb/libusb64.dart';
 import 'package:quick_usb/src/common.dart';
 
 import 'quick_usb_platform_interface.dart';
+import 'utils.dart';
 
 class QuickUsbWindows extends _QuickUsbDesktop {
   QuickUsbWindows() : super(DynamicLibrary.open('libusb-1.0.23.dll'));
@@ -60,18 +61,14 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
     for (var i = 0; deviceList[i] != nullptr; i++) {
       var dev = deviceList[i];
       var addr = _libusb.libusb_get_device_address(dev);
-      var vendorId;
-      var productId;
-      var result = _libusb.libusb_get_device_descriptor(dev, descPtr);
+      var getDesc = _libusb.libusb_get_device_descriptor(dev, descPtr) ==
+          libusb_error.LIBUSB_SUCCESS;
 
-      if (result == libusb_error.LIBUSB_SUCCESS) {
-        vendorId = descPtr.ref.idVendor;
-        productId = descPtr.ref.idProduct;
-      }
       yield UsbDevice(
         identifier: addr.toString(),
-        vendorId: vendorId,
-        productId: productId,
+        vendorId: getDesc ? descPtr.ref.idVendor : null,
+        productId: getDesc ? descPtr.ref.idProduct : null,
+        configurationCount: getDesc ? descPtr.ref.bNumConfigurations : null,
       );
     }
 
@@ -103,8 +100,49 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
 
   @override
   Future<void> closeDevice(UsbDevice usbDevice) async {
-    assert(_devHandle != null, 'Last device not opened');
+    if (_devHandle != null) {
+      _libusb.libusb_close(_devHandle);
+      _devHandle = null;
+    }
+  }
 
-    _libusb.libusb_close(_devHandle);
+  @override
+  Future<UsbConfiguration> getConfiguration(int index) async {
+    assert(_devHandle != null, 'Device not open');
+
+    var configDescPtrPtr = ffi.allocate<Pointer<libusb_config_descriptor>>();
+    try {
+      var device = _libusb.libusb_get_device(_devHandle);
+      var getConfigDesc =
+          _libusb.libusb_get_config_descriptor(device, index, configDescPtrPtr);
+      if (getConfigDesc != libusb_error.LIBUSB_SUCCESS) {
+        print('getConfigDesc error: ${_libusb.describeError(getConfigDesc)}');
+        return null;
+      }
+
+      var configDescPtr = configDescPtrPtr.value;
+      var usbConfiguration = UsbConfiguration(
+        id: configDescPtr.ref.bConfigurationValue,
+        index: configDescPtr.ref.iConfiguration,
+        interfaceCount: configDescPtr.ref.bNumInterfaces,
+      );
+      _libusb.libusb_free_config_descriptor(configDescPtr);
+
+      return usbConfiguration;
+    } finally {
+      ffi.free(configDescPtrPtr);
+    }
+  }
+
+  @override
+  Future<bool> setConfiguration(UsbConfiguration config) async {
+    assert(_devHandle != null, 'Device not open');
+
+    var setConfig = _libusb.libusb_set_configuration(_devHandle, config.id);
+    if (setConfig != libusb_error.LIBUSB_SUCCESS) {
+      print('setConfig error: ${_libusb.describeError(setConfig)}');
+      return false;
+    }
+    return true;
   }
 }
