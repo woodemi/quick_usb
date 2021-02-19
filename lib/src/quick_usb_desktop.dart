@@ -129,13 +129,29 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
       var usbConfiguration = _UsbConfigurationDesktop(
         id: configDescPtr.ref.bConfigurationValue,
         index: configDescPtr.ref.iConfiguration,
-        interfaceCount: configDescPtr.ref.bNumInterfaces,
+        interfaces: _iterateInterface(
+                configDescPtr.ref.interface_1, configDescPtr.ref.bNumInterfaces)
+            .toList(),
       );
       _libusb.libusb_free_config_descriptor(configDescPtr);
 
       return usbConfiguration;
     } finally {
       ffi.free(configDescPtrPtr);
+    }
+  }
+
+  Iterable<UsbInterface> _iterateInterface(
+      Pointer<libusb_interface> interfacePtr, int interfaceCount) sync* {
+    for (var i = 0; i < interfaceCount; i++) {
+      var interface = interfacePtr[i];
+      for (var i = 0; i < interface.num_altsetting; i++) {
+        var intfDesc = interface.altsetting[i];
+        yield UsbInterface(
+          id: intfDesc.bInterfaceNumber,
+          alternateSetting: intfDesc.bAlternateSetting,
+        );
+      }
     }
   }
 
@@ -152,32 +168,31 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
   }
 
   @override
-  Future<bool> claimInterface(UsbInterface intf) {
-    // TODO: implement claimInterface
-    throw UnimplementedError();
+  Future<bool> claimInterface(UsbInterface intf) async {
+    var result = _libusb.libusb_claim_interface(_devHandle, intf.id);
+    return result == libusb_error.LIBUSB_SUCCESS;
   }
 
   @override
-  Future<bool> releaseInterface(UsbInterface intf) {
-    // TODO: implement releaseInterface
-    throw UnimplementedError();
+  Future<bool> releaseInterface(UsbInterface intf) async {
+    var result = _libusb.libusb_release_interface(_devHandle, intf.id);
+    return result == libusb_error.LIBUSB_SUCCESS;
   }
 }
 
 class _UsbConfigurationDesktop extends UsbConfiguration {
   _UsbConfigurationDesktop({
-    @required id,
-    @required index,
-    @required interfaceCount,
+    @required int id,
+    @required int index,
+    @required List<UsbInterface> interfaces,
   }) : super(
           id: id,
           index: index,
-          interfaceCount: interfaceCount,
+          interfaces: interfaces,
         );
 
   @override
   Future<UsbInterface> getInterface(int index) async {
-    // TODO: implement getInterface
-    throw UnimplementedError();
+    return interfaces[index];
   }
 }

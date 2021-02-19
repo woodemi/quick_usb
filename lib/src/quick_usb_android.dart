@@ -73,20 +73,22 @@ class QuickUsbAndroid extends QuickUsbPlatform {
 
 class _UsbConfigurationAndroid extends UsbConfiguration {
   _UsbConfigurationAndroid({
-    @required id,
-    @required index,
-    @required interfaceCount,
+    @required int id,
+    @required int index,
+    @required List<UsbInterface> interfaces,
   }) : super(
           id: id,
           index: index,
-          interfaceCount: interfaceCount,
+          interfaces: interfaces,
         );
 
   factory _UsbConfigurationAndroid.fromMap(Map<dynamic, dynamic> map) {
+    var interfaces =
+        (map['interfaces'] as List).map((e) => UsbInterface()).toList();
     return _UsbConfigurationAndroid(
       id: map['id'],
       index: map['index'],
-      interfaceCount: map['interfaceCount'],
+      interfaces: interfaces,
     );
   }
 

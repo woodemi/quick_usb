@@ -38,19 +38,19 @@ class UsbDevice {
 abstract class UsbConfiguration {
   final int id;
   final int index;
-  final int interfaceCount;
+  final List<UsbInterface> interfaces;
 
   UsbConfiguration({
     @required this.id,
     @required this.index,
-    @required this.interfaceCount,
+    @required this.interfaces,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'index': index,
-      'interfaceCount': interfaceCount,
+      'interfaces': interfaces.map((e) => e.toMap()).toList(),
     };
   }
 
@@ -60,4 +60,19 @@ abstract class UsbConfiguration {
   Future<UsbInterface> getInterface(int index);
 }
 
-class UsbInterface {}
+class UsbInterface {
+  final int id;
+  final int alternateSetting;
+
+  UsbInterface({
+    @required this.id,
+    @required this.alternateSetting,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'alternateSetting': alternateSetting,
+    };
+  }
+}
