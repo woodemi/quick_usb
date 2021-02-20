@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
@@ -135,7 +136,7 @@ class _MyAppState extends State<MyApp> {
           child: Text('setConfiguration'),
           onPressed: () async {
             var setConfiguration =
-                await QuickUsb.setConfiguration(_configuration);
+            await QuickUsb.setConfiguration(_configuration);
             print('setConfiguration $setConfiguration');
           },
         ),
@@ -151,7 +152,7 @@ class _MyAppState extends State<MyApp> {
           child: Text('claimInterface'),
           onPressed: () async {
             var claimInterface =
-                await QuickUsb.claimInterface(_configuration.interfaces[0]);
+            await QuickUsb.claimInterface(_configuration.interfaces[0]);
             print('claimInterface $claimInterface');
           },
         ),
@@ -159,7 +160,7 @@ class _MyAppState extends State<MyApp> {
           child: Text('releaseInterface'),
           onPressed: () async {
             var releaseInterface =
-                await QuickUsb.releaseInterface(_configuration.interfaces[0]);
+            await QuickUsb.releaseInterface(_configuration.interfaces[0]);
             print('releaseInterface $releaseInterface');
           },
         ),
@@ -187,7 +188,7 @@ class _MyAppState extends State<MyApp> {
             var endpoint = _configuration.interfaces[0].endpoints
                 .firstWhere((e) => e.direction == UsbEndpoint.DIRECTION_OUT);
             var bulkTransferOut =
-                await QuickUsb.bulkTransferOut(endpoint, data);
+            await QuickUsb.bulkTransferOut(endpoint, data);
             print('bulkTransferOut $bulkTransferOut');
           },
         ),
