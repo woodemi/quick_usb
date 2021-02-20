@@ -134,9 +134,9 @@ class _MyAppState extends State<MyApp> {
         RaisedButton(
           child: Text('setConfiguration'),
           onPressed: () async {
-            var getConfiguration =
-            await QuickUsb.setConfiguration(_configuration);
-            print('setConfiguration $getConfiguration');
+            var setConfiguration =
+                await QuickUsb.setConfiguration(_configuration);
+            print('setConfiguration $setConfiguration');
           },
         ),
       ],
@@ -151,7 +151,7 @@ class _MyAppState extends State<MyApp> {
           child: Text('claimInterface'),
           onPressed: () async {
             var claimInterface =
-            await QuickUsb.claimInterface(_configuration.interfaces[0]);
+                await QuickUsb.claimInterface(_configuration.interfaces[0]);
             print('claimInterface $claimInterface');
           },
         ),
