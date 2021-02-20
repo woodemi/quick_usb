@@ -103,7 +103,7 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
   }
 
   @override
-  Future<void> closeDevice(UsbDevice usbDevice) async {
+  Future<void> closeDevice() async {
     if (_devHandle != null) {
       _libusb.libusb_close(_devHandle);
       _devHandle = null;

@@ -108,7 +108,7 @@ class _MyAppState extends State<MyApp> {
         RaisedButton(
           child: Text('closeDevice'),
           onPressed: () async {
-            await QuickUsb.closeDevice(_deviceList.first);
+            await QuickUsb.closeDevice();
             print('closeDevice');
           },
         ),

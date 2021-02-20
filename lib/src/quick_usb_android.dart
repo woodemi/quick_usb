@@ -40,8 +40,8 @@ class QuickUsbAndroid extends QuickUsbPlatform {
   }
 
   @override
-  Future<void> closeDevice(UsbDevice usbDevice) {
-    return _channel.invokeMethod('closeDevice', usbDevice.toMap());
+  Future<void> closeDevice() {
+    return _channel.invokeMethod('closeDevice');
   }
 
   @override

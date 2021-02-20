@@ -32,7 +32,7 @@ abstract class QuickUsbPlatform extends PlatformInterface {
 
   Future<bool> openDevice(UsbDevice usbDevice);
 
-  Future<void> closeDevice(UsbDevice usbDevice);
+  Future<void> closeDevice();
 
   Future<UsbConfiguration> getConfiguration(int index);
 
