@@ -1,3 +1,8 @@
+## 0.1.0+2
+
+- Fix bulkTransferOut length limit on Android
+- Return negative length when bulkTransferOut error on desktop
+
 ## 0.1.0+1
 
 - Fix README
