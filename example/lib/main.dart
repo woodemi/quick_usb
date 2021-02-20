@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:convert/convert.dart';
 import 'package:flutter/material.dart';
 import 'package:quick_usb/quick_usb.dart';
 
@@ -171,6 +171,15 @@ class _MyAppState extends State<MyApp> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
+        RaisedButton(
+          child: Text('bulkTransferIn'),
+          onPressed: () async {
+            var endpoint = _configuration.interfaces[0].endpoints
+                .firstWhere((e) => e.direction == UsbEndpoint.DIRECTION_IN);
+            var bulkTransferIn = await QuickUsb.bulkTransferIn(endpoint, 1024);
+            print('bulkTransferIn ${hex.encode(bulkTransferIn)}');
+          },
+        ),
         RaisedButton(
           child: Text('bulkTransferOut'),
           onPressed: () async {

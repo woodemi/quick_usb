@@ -80,7 +80,7 @@ packages:
       name: libusb
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.2.23"
+    version: "0.2.23+1"
   matcher:
     dependency: transitive
     description:
