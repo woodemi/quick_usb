@@ -148,23 +148,18 @@ class _MyAppState extends State<MyApp> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         RaisedButton(
-          child: Text('getInterface'),
-          onPressed: () async {
-            _interface = await _configuration.getInterface(0);
-            print('getInterface $_interface');
-          },
-        ),
-        RaisedButton(
           child: Text('claimInterface'),
           onPressed: () async {
-            var claimInterface = await QuickUsb.claimInterface(_interface);
+            var claimInterface =
+                await QuickUsb.claimInterface(_configuration.interfaces[0]);
             print('claimInterface $claimInterface');
           },
         ),
         RaisedButton(
           child: Text('releaseInterface'),
           onPressed: () async {
-            var releaseInterface = await QuickUsb.releaseInterface(_interface);
+            var releaseInterface =
+                await QuickUsb.releaseInterface(_configuration.interfaces[0]);
             print('releaseInterface $releaseInterface');
           },
         ),

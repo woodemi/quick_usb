@@ -35,7 +35,7 @@ class UsbDevice {
   String toString() => toMap().toString();
 }
 
-abstract class UsbConfiguration {
+class UsbConfiguration {
   final int id;
   final int index;
   final List<UsbInterface> interfaces;
@@ -45,6 +45,17 @@ abstract class UsbConfiguration {
     @required this.index,
     @required this.interfaces,
   });
+
+  factory UsbConfiguration.fromMap(Map<dynamic, dynamic> map) {
+    var interfaces = (map['interfaces'] as List)
+        .map((e) => UsbInterface.fromMap(e))
+        .toList();
+    return UsbConfiguration(
+      id: map['id'],
+      index: map['index'],
+      interfaces: interfaces,
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -56,8 +67,6 @@ abstract class UsbConfiguration {
 
   @override
   String toString() => toMap().toString();
-
-  Future<UsbInterface> getInterface(int index);
 }
 
 class UsbInterface {
@@ -69,10 +78,20 @@ class UsbInterface {
     @required this.alternateSetting,
   });
 
+  factory UsbInterface.fromMap(Map<dynamic, dynamic> map) {
+    return UsbInterface(
+      id: map['id'],
+      alternateSetting: map['alternateSetting'],
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'alternateSetting': alternateSetting,
     };
   }
+
+  @override
+  String toString() => toMap().toString();
 }

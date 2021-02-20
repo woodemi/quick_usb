@@ -1,7 +1,6 @@
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart' as ffi;
-import 'package:flutter/foundation.dart';
 import 'package:libusb/libusb64.dart';
 import 'package:quick_usb/src/common.dart';
 
@@ -126,7 +125,7 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
       }
 
       var configDescPtr = configDescPtrPtr.value;
-      var usbConfiguration = _UsbConfigurationDesktop(
+      var usbConfiguration = UsbConfiguration(
         id: configDescPtr.ref.bConfigurationValue,
         index: configDescPtr.ref.iConfiguration,
         interfaces: _iterateInterface(
@@ -145,8 +144,8 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
       Pointer<libusb_interface> interfacePtr, int interfaceCount) sync* {
     for (var i = 0; i < interfaceCount; i++) {
       var interface = interfacePtr[i];
-      for (var i = 0; i < interface.num_altsetting; i++) {
-        var intfDesc = interface.altsetting[i];
+      for (var j = 0; j < interface.num_altsetting; j++) {
+        var intfDesc = interface.altsetting[j];
         yield UsbInterface(
           id: intfDesc.bInterfaceNumber,
           alternateSetting: intfDesc.bAlternateSetting,
@@ -177,22 +176,5 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
   Future<bool> releaseInterface(UsbInterface intf) async {
     var result = _libusb.libusb_release_interface(_devHandle, intf.id);
     return result == libusb_error.LIBUSB_SUCCESS;
-  }
-}
-
-class _UsbConfigurationDesktop extends UsbConfiguration {
-  _UsbConfigurationDesktop({
-    @required int id,
-    @required int index,
-    @required List<UsbInterface> interfaces,
-  }) : super(
-          id: id,
-          index: index,
-          interfaces: interfaces,
-        );
-
-  @override
-  Future<UsbInterface> getInterface(int index) async {
-    return interfaces[index];
   }
 }
