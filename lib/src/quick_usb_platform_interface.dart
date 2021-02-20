@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:quick_usb/src/common.dart';
 
@@ -41,4 +43,6 @@ abstract class QuickUsbPlatform extends PlatformInterface {
   Future<bool> claimInterface(UsbInterface intf);
 
   Future<bool> releaseInterface(UsbInterface intf);
+
+  Future<int> bulkTransfer(UsbEndpoint endpoint, Uint8List data);
 }

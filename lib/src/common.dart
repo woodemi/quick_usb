@@ -103,6 +103,17 @@ class UsbInterface {
 }
 
 class UsbEndpoint {
+  // Bits 0:3 are the endpoint number
+  static const int MASK_NUMBER = 0x07;
+
+  // Bits 4:6 are reserved
+
+  // Bit 7 indicates direction
+  static const int MASK_DIRECTION = 0x80;
+
+  static const int DIRECTION_OUT = 0x00;
+  static const int DIRECTION_IN = 0x80;
+
   final int endpointNumber;
   final int direction;
 
