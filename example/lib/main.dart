@@ -175,7 +175,9 @@ class _MyAppState extends State<MyApp> {
           child: Text('bulkTransfer'),
           onPressed: () async {
             var data = Uint8List.fromList(utf8.encode(''));
-            var bulkTransfer = await QuickUsb.bulkTransfer(data);
+            var endpoint = _configuration.interfaces[0].endpoints
+                .firstWhere((e) => e.direction == UsbEndpoint.DIRECTION_OUT);
+            var bulkTransfer = await QuickUsb.bulkTransfer(endpoint, data);
             print('bulkTransfer $bulkTransfer');
           },
         ),

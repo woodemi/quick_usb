@@ -69,7 +69,7 @@ class QuickUsbAndroid extends QuickUsbPlatform {
   }
 
   @override
-  Future<int> bulkTransfer(Uint8List data) {
+  Future<int> bulkTransfer(UsbEndpoint endpoint, Uint8List data) {
     // TODO: implement bulkTransfer
     throw UnimplementedError();
   }

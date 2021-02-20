@@ -163,11 +163,8 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
     for (var i = 0; i < endpointCount; i++) {
       var endpointDesc = endpointDescPtr[i];
       yield UsbEndpoint(
-        endpointNumber: endpointDesc.bEndpointAddress & 0x07,
-        // Bits 0:3 are the endpoint number
-        // Bits 4:6 are reserved
-        direction:
-            endpointDesc.bEndpointAddress & 0x80, // Bit 7 indicates direction
+        endpointNumber: endpointDesc.bEndpointAddress & UsbEndpoint.MASK_NUMBER,
+        direction: endpointDesc.bEndpointAddress & UsbEndpoint.MASK_DIRECTION,
       );
     }
   }
@@ -201,8 +198,25 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
   }
 
   @override
-  Future<int> bulkTransfer(Uint8List data) {
-    // TODO: implement bulkTransfer
-    throw UnimplementedError();
+  Future<int> bulkTransfer(UsbEndpoint endpoint, Uint8List data) async {
+    assert(_devHandle != null, 'Device not open');
+
+    var actualLengthPtr = ffi.allocate<Int32>();
+    var dataPtr = ffi.allocate<Uint8>(count: data.length);
+    dataPtr.asTypedList(data.length).setAll(0, data);
+    try {
+      var result = _libusb.libusb_bulk_transfer(
+        _devHandle,
+        endpoint.endpointNumber,
+        dataPtr,
+        data.length,
+        actualLengthPtr,
+        1000,
+      );
+      return result == libusb_error.LIBUSB_SUCCESS ? actualLengthPtr.value : 0;
+    } finally {
+      ffi.free(actualLengthPtr);
+      ffi.free(dataPtr);
+    }
   }
 }
