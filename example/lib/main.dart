@@ -11,8 +11,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -33,7 +31,7 @@ class _MyAppState extends State<MyApp> {
         _has_request(),
         _open_close(),
         _get_set_configuration(),
-        _get_claim_release_interface(),
+        _claim_release_interface(),
       ],
     );
   }
@@ -141,9 +139,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  UsbInterface _interface;
-
-  Widget _get_claim_release_interface() {
+  Widget _claim_release_interface() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
