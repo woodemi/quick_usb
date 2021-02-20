@@ -4,10 +4,12 @@ A cross-platform (Android/Windows/macOS/Linux) USB plugin for Flutter
 
 ## Usage
 
-- List device
-- Check/Request permission
-- Open/Close device
-- Get/Set configuration
+- [List devices](#list-devices)
+- [Check/Request permission](#checkrequest-permission)
+- [Open/Close device](#openclose-device)
+- [Get/Set configuration](#getset-configuration)
+- [Claim/Release interface](#claimrelease-interface)
+- [Bulk transfer in/out](#bulk-transfer-inout)
 
 ### List devices
 
