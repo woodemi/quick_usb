@@ -38,19 +38,22 @@ class UsbDevice {
 class UsbConfiguration {
   final int id;
   final int index;
-  final int interfaceCount;
+  final List<UsbInterface> interfaces;
 
   UsbConfiguration({
     @required this.id,
     @required this.index,
-    @required this.interfaceCount,
+    @required this.interfaces,
   });
 
   factory UsbConfiguration.fromMap(Map<dynamic, dynamic> map) {
+    var interfaces = (map['interfaces'] as List)
+        .map((e) => UsbInterface.fromMap(e))
+        .toList();
     return UsbConfiguration(
       id: map['id'],
       index: map['index'],
-      interfaceCount: map['interfaceCount'],
+      interfaces: interfaces,
     );
   }
 
@@ -58,7 +61,34 @@ class UsbConfiguration {
     return {
       'id': id,
       'index': index,
-      'interfaceCount': interfaceCount,
+      'interfaces': interfaces.map((e) => e.toMap()).toList(),
+    };
+  }
+
+  @override
+  String toString() => toMap().toString();
+}
+
+class UsbInterface {
+  final int id;
+  final int alternateSetting;
+
+  UsbInterface({
+    @required this.id,
+    @required this.alternateSetting,
+  });
+
+  factory UsbInterface.fromMap(Map<dynamic, dynamic> map) {
+    return UsbInterface(
+      id: map['id'],
+      alternateSetting: map['alternateSetting'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'alternateSetting': alternateSetting,
     };
   }
 

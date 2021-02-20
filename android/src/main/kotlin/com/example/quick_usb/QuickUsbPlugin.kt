@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbDeviceConnection
+import android.hardware.usb.UsbInterface
 import android.hardware.usb.UsbManager
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -105,10 +106,17 @@ class QuickUsbPlugin : FlutterPlugin, MethodCallHandler {
         val device = usbDevice ?: return result.error("IllegalState", "usbDevice null", null)
         val index = call.argument<Int>("index")!!
         val configuration = device.getConfiguration(index)
+        val interfaces = List(configuration.interfaceCount) {
+          val usbInterface = configuration.getInterface(it)
+          mapOf(
+                  "id" to usbInterface.id,
+                  "alternateSetting" to usbInterface.alternateSetting
+          )
+        }
         result.success(mapOf(
                 "id" to configuration.id,
                 "index" to index,
-                "interfaceCount" to configuration.interfaceCount
+                "interfaces" to interfaces
         ))
       }
       "setConfiguration" -> {
@@ -118,7 +126,33 @@ class QuickUsbPlugin : FlutterPlugin, MethodCallHandler {
         val configuration = device.getConfiguration(index)
         result.success(connection.setConfiguration(configuration))
       }
+      "claimInterface" -> {
+        val device = usbDevice ?: return result.error("IllegalState", "usbDevice null", null)
+        val connection = usbDeviceConnection ?: return result.error("IllegalState", "usbDeviceConnection null", null)
+        val id = call.argument<Int>("id")!!
+        val alternateSetting = call.argument<Int>("alternateSetting")!!
+        val usbInterface = device.findInterface(id, alternateSetting)
+        result.success(connection.claimInterface(usbInterface, true))
+      }
+      "releaseInterface" -> {
+        val device = usbDevice ?: return result.error("IllegalState", "usbDevice null", null)
+        val connection = usbDeviceConnection ?: return result.error("IllegalState", "usbDeviceConnection null", null)
+        val id = call.argument<Int>("id")!!
+        val alternateSetting = call.argument<Int>("alternateSetting")!!
+        val usbInterface = device.findInterface(id, alternateSetting)
+        result.success(connection.releaseInterface(usbInterface))
+      }
       else -> result.notImplemented()
     }
   }
+}
+
+fun UsbDevice.findInterface(id: Int, alternateSetting: Int): UsbInterface? {
+  for (i in 0..interfaceCount) {
+    val usbInterface = getInterface(i)
+    if (usbInterface.id == id && usbInterface.alternateSetting == alternateSetting) {
+      return usbInterface
+    }
+  }
+  return null
 }

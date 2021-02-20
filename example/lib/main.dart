@@ -33,6 +33,7 @@ class _MyAppState extends State<MyApp> {
         _has_request(),
         _open_close(),
         _get_set_configuration(),
+        _get_claim_release_interface(),
       ],
     );
   }
@@ -134,6 +135,32 @@ class _MyAppState extends State<MyApp> {
             var getConfiguration =
                 await QuickUsb.setConfiguration(_configuration);
             print('setConfiguration $getConfiguration');
+          },
+        ),
+      ],
+    );
+  }
+
+  UsbInterface _interface;
+
+  Widget _get_claim_release_interface() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        RaisedButton(
+          child: Text('claimInterface'),
+          onPressed: () async {
+            var claimInterface =
+                await QuickUsb.claimInterface(_configuration.interfaces[0]);
+            print('claimInterface $claimInterface');
+          },
+        ),
+        RaisedButton(
+          child: Text('releaseInterface'),
+          onPressed: () async {
+            var releaseInterface =
+                await QuickUsb.releaseInterface(_configuration.interfaces[0]);
+            print('releaseInterface $releaseInterface');
           },
         ),
       ],

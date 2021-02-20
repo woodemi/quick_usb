@@ -7,24 +7,28 @@ import 'package:quick_usb/src/common.dart';
 import 'quick_usb_platform_interface.dart';
 import 'utils.dart';
 
+Libusb _libusb;
+
 class QuickUsbWindows extends _QuickUsbDesktop {
-  QuickUsbWindows() : super(DynamicLibrary.open('libusb-1.0.23.dll'));
+  QuickUsbWindows() {
+    _libusb = Libusb(DynamicLibrary.open('libusb-1.0.23.dll'));
+  }
 }
 
 class QuickUsbMacos extends _QuickUsbDesktop {
-  QuickUsbMacos() : super(DynamicLibrary.open('libusb-1.0.23.dylib'));
+  QuickUsbMacos() {
+    _libusb = Libusb(DynamicLibrary.open('libusb-1.0.23.dylib'));
+  }
 }
 
 class QuickUsbLinux extends _QuickUsbDesktop {
-  QuickUsbLinux() : super(DynamicLibrary.open('libusb-1.0.23.so'));
+  QuickUsbLinux() {
+    _libusb = Libusb(DynamicLibrary.open('libusb-1.0.23.so'));
+  }
 }
 
 class _QuickUsbDesktop extends QuickUsbPlatform {
-  final Libusb _libusb;
   Pointer<libusb_device_handle> _devHandle;
-
-  _QuickUsbDesktop(DynamicLibrary dynamicLibrary)
-      : _libusb = Libusb(dynamicLibrary);
 
   @override
   Future<bool> init() async {
@@ -124,13 +128,29 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
       var usbConfiguration = UsbConfiguration(
         id: configDescPtr.ref.bConfigurationValue,
         index: configDescPtr.ref.iConfiguration,
-        interfaceCount: configDescPtr.ref.bNumInterfaces,
+        interfaces: _iterateInterface(
+                configDescPtr.ref.interface_1, configDescPtr.ref.bNumInterfaces)
+            .toList(),
       );
       _libusb.libusb_free_config_descriptor(configDescPtr);
 
       return usbConfiguration;
     } finally {
       ffi.free(configDescPtrPtr);
+    }
+  }
+
+  Iterable<UsbInterface> _iterateInterface(
+      Pointer<libusb_interface> interfacePtr, int interfaceCount) sync* {
+    for (var i = 0; i < interfaceCount; i++) {
+      var interface = interfacePtr[i];
+      for (var j = 0; j < interface.num_altsetting; j++) {
+        var intfDesc = interface.altsetting[j];
+        yield UsbInterface(
+          id: intfDesc.bInterfaceNumber,
+          alternateSetting: intfDesc.bAlternateSetting,
+        );
+      }
     }
   }
 
@@ -144,5 +164,17 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
       return false;
     }
     return true;
+  }
+
+  @override
+  Future<bool> claimInterface(UsbInterface intf) async {
+    var result = _libusb.libusb_claim_interface(_devHandle, intf.id);
+    return result == libusb_error.LIBUSB_SUCCESS;
+  }
+
+  @override
+  Future<bool> releaseInterface(UsbInterface intf) async {
+    var result = _libusb.libusb_release_interface(_devHandle, intf.id);
+    return result == libusb_error.LIBUSB_SUCCESS;
   }
 }

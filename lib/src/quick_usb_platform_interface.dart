@@ -37,4 +37,8 @@ abstract class QuickUsbPlatform extends PlatformInterface {
   Future<UsbConfiguration> getConfiguration(int index);
 
   Future<bool> setConfiguration(UsbConfiguration config);
+
+  Future<bool> claimInterface(UsbInterface intf);
+
+  Future<bool> releaseInterface(UsbInterface intf);
 }
