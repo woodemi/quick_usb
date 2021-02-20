@@ -149,8 +149,25 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
         yield UsbInterface(
           id: intfDesc.bInterfaceNumber,
           alternateSetting: intfDesc.bAlternateSetting,
+          endpoints: _iterateEndpoint(intfDesc.endpoint, intfDesc.bNumEndpoints)
+              .toList(),
         );
       }
+    }
+  }
+
+  Iterable<UsbEndpoint> _iterateEndpoint(
+      Pointer<libusb_endpoint_descriptor> endpointDescPtr,
+      int endpointCount) sync* {
+    for (var i = 0; i < endpointCount; i++) {
+      var endpointDesc = endpointDescPtr[i];
+      yield UsbEndpoint(
+        endpointNumber: endpointDesc.bEndpointAddress & 0x07,
+        // Bits 0:3 are the endpoint number
+        // Bits 4:6 are reserved
+        direction:
+            endpointDesc.bEndpointAddress & 0x80, // Bit 7 indicates direction
+      );
     }
   }
 
@@ -168,12 +185,16 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
 
   @override
   Future<bool> claimInterface(UsbInterface intf) async {
+    assert(_devHandle != null, 'Device not open');
+
     var result = _libusb.libusb_claim_interface(_devHandle, intf.id);
     return result == libusb_error.LIBUSB_SUCCESS;
   }
 
   @override
   Future<bool> releaseInterface(UsbInterface intf) async {
+    assert(_devHandle != null, 'Device not open');
+
     var result = _libusb.libusb_release_interface(_devHandle, intf.id);
     return result == libusb_error.LIBUSB_SUCCESS;
   }
