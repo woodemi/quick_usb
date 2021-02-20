@@ -198,9 +198,32 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
   }
 
   @override
-  Future<Uint8List> bulkTransferIn(UsbEndpoint endpoint, int maxLength) {
-    // TODO: implement bulkTransferIn
-    throw UnimplementedError();
+  Future<Uint8List> bulkTransferIn(UsbEndpoint endpoint, int maxLength) async {
+    assert(_devHandle != null, 'Device not open');
+    assert(endpoint.direction == UsbEndpoint.DIRECTION_IN,
+        'Endpoint\'s direction should be in');
+
+    var actualLengthPtr = ffi.allocate<Int32>();
+    var dataPtr = ffi.allocate<Uint8>(count: maxLength);
+    try {
+      var result = _libusb.libusb_bulk_transfer(
+        _devHandle,
+        endpoint.endpointAddress,
+        dataPtr,
+        maxLength,
+        actualLengthPtr,
+        1000,
+      );
+
+      if (result != libusb_error.LIBUSB_SUCCESS) {
+        print('bulkTransferIn error: ${_libusb.describeError(result)}');
+        return null;
+      }
+      return Uint8List.fromList(dataPtr.asTypedList(actualLengthPtr.value));
+    } finally {
+      ffi.free(actualLengthPtr);
+      ffi.free(dataPtr);
+    }
   }
 
   @override
@@ -215,13 +238,18 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
     try {
       var result = _libusb.libusb_bulk_transfer(
         _devHandle,
-        endpoint.endpointNumber,
+        endpoint.endpointAddress,
         dataPtr,
         data.length,
         actualLengthPtr,
         1000,
       );
-      return result == libusb_error.LIBUSB_SUCCESS ? actualLengthPtr.value : 0;
+
+      if (result != libusb_error.LIBUSB_SUCCESS) {
+        print('bulkTransferOut error: ${_libusb.describeError(result)}');
+        return 0;
+      }
+      return actualLengthPtr.value;
     } finally {
       ffi.free(actualLengthPtr);
       ffi.free(dataPtr);
