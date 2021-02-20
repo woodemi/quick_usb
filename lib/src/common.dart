@@ -129,6 +129,8 @@ class UsbEndpoint {
     );
   }
 
+  int get endpointAddress => endpointNumber | direction;
+
   Map<String, dynamic> toMap() {
     return {
       'endpointNumber': endpointNumber,
