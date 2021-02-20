@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart' as ffi;
 import 'package:libusb/libusb64.dart';
@@ -197,5 +198,11 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
 
     var result = _libusb.libusb_release_interface(_devHandle, intf.id);
     return result == libusb_error.LIBUSB_SUCCESS;
+  }
+
+  @override
+  Future<int> bulkTransfer(Uint8List data) {
+    // TODO: implement bulkTransfer
+    throw UnimplementedError();
   }
 }

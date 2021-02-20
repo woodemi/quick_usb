@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:quick_usb/src/common.dart';
@@ -65,5 +66,11 @@ class QuickUsbAndroid extends QuickUsbPlatform {
   @override
   Future<bool> releaseInterface(UsbInterface intf) {
     return _channel.invokeMethod('releaseInterface', intf.toMap());
+  }
+
+  @override
+  Future<int> bulkTransfer(Uint8List data) {
+    // TODO: implement bulkTransfer
+    throw UnimplementedError();
   }
 }

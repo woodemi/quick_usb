@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'src/common.dart';
 import 'src/quick_usb_android.dart';
@@ -60,4 +61,7 @@ class QuickUsb {
 
   static Future<bool> releaseInterface(UsbInterface intf) =>
       _platform.releaseInterface(intf);
+
+  static Future<int> bulkTransfer(Uint8List data) =>
+      _platform.bulkTransfer(data);
 }

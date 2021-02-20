@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:quick_usb/quick_usb.dart';
 
@@ -32,6 +35,7 @@ class _MyAppState extends State<MyApp> {
         _open_close(),
         _get_set_configuration(),
         _claim_release_interface(),
+        _bulk_transfer(),
       ],
     );
   }
@@ -131,7 +135,7 @@ class _MyAppState extends State<MyApp> {
           child: Text('setConfiguration'),
           onPressed: () async {
             var getConfiguration =
-                await QuickUsb.setConfiguration(_configuration);
+            await QuickUsb.setConfiguration(_configuration);
             print('setConfiguration $getConfiguration');
           },
         ),
@@ -147,7 +151,7 @@ class _MyAppState extends State<MyApp> {
           child: Text('claimInterface'),
           onPressed: () async {
             var claimInterface =
-                await QuickUsb.claimInterface(_configuration.interfaces[0]);
+            await QuickUsb.claimInterface(_configuration.interfaces[0]);
             print('claimInterface $claimInterface');
           },
         ),
@@ -157,6 +161,22 @@ class _MyAppState extends State<MyApp> {
             var releaseInterface =
                 await QuickUsb.releaseInterface(_configuration.interfaces[0]);
             print('releaseInterface $releaseInterface');
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _bulk_transfer() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        RaisedButton(
+          child: Text('bulkTransfer'),
+          onPressed: () async {
+            var data = Uint8List.fromList(utf8.encode(''));
+            var bulkTransfer = await QuickUsb.bulkTransfer(data);
+            print('bulkTransfer $bulkTransfer');
           },
         ),
       ],
