@@ -62,6 +62,6 @@ class QuickUsb {
   static Future<bool> releaseInterface(UsbInterface intf) =>
       _platform.releaseInterface(intf);
 
-  static Future<int> bulkTransfer(UsbEndpoint endpoint, Uint8List data) =>
-      _platform.bulkTransfer(endpoint, data);
+  static Future<int> bulkTransferOut(UsbEndpoint endpoint, Uint8List data) =>
+      _platform.bulkTransferOut(endpoint, data);
 }

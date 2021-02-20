@@ -198,8 +198,10 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
   }
 
   @override
-  Future<int> bulkTransfer(UsbEndpoint endpoint, Uint8List data) async {
+  Future<int> bulkTransferOut(UsbEndpoint endpoint, Uint8List data) async {
     assert(_devHandle != null, 'Device not open');
+    assert(endpoint.direction == UsbEndpoint.DIRECTION_OUT,
+        'Endpoint\'s direction should be out');
 
     var actualLengthPtr = ffi.allocate<Int32>();
     var dataPtr = ffi.allocate<Uint8>(count: data.length);

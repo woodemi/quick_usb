@@ -44,5 +44,5 @@ abstract class QuickUsbPlatform extends PlatformInterface {
 
   Future<bool> releaseInterface(UsbInterface intf);
 
-  Future<int> bulkTransfer(UsbEndpoint endpoint, Uint8List data);
+  Future<int> bulkTransferOut(UsbEndpoint endpoint, Uint8List data);
 }

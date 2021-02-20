@@ -172,13 +172,14 @@ class _MyAppState extends State<MyApp> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         RaisedButton(
-          child: Text('bulkTransfer'),
+          child: Text('bulkTransferOut'),
           onPressed: () async {
             var data = Uint8List.fromList(utf8.encode(''));
             var endpoint = _configuration.interfaces[0].endpoints
                 .firstWhere((e) => e.direction == UsbEndpoint.DIRECTION_OUT);
-            var bulkTransfer = await QuickUsb.bulkTransfer(endpoint, data);
-            print('bulkTransfer $bulkTransfer');
+            var bulkTransferOut =
+                await QuickUsb.bulkTransferOut(endpoint, data);
+            print('bulkTransferOut $bulkTransferOut');
           },
         ),
       ],

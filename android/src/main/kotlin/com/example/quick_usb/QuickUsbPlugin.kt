@@ -129,7 +129,7 @@ class QuickUsbPlugin : FlutterPlugin, MethodCallHandler {
         val usbInterface = device.findInterface(id, alternateSetting)
         result.success(connection.releaseInterface(usbInterface))
       }
-      "bulkTransfer" -> {
+      "bulkTransferOut" -> {
         val device = usbDevice ?: return result.error("IllegalState", "usbDevice null", null)
         val connection = usbDeviceConnection ?: return result.error("IllegalState", "usbDeviceConnection null", null)
         val endpointMap = call.argument<Map<String, Any>>("endpoint")!!
