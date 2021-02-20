@@ -247,7 +247,7 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
 
       if (result != libusb_error.LIBUSB_SUCCESS) {
         print('bulkTransferOut error: ${_libusb.describeError(result)}');
-        return 0;
+        return -1;
       }
       return actualLengthPtr.value;
     } finally {
