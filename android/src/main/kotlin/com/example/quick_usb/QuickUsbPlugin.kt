@@ -5,10 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.hardware.usb.UsbDevice
-import android.hardware.usb.UsbDeviceConnection
-import android.hardware.usb.UsbInterface
-import android.hardware.usb.UsbManager
+import android.hardware.usb.*
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
@@ -106,18 +103,8 @@ class QuickUsbPlugin : FlutterPlugin, MethodCallHandler {
         val device = usbDevice ?: return result.error("IllegalState", "usbDevice null", null)
         val index = call.argument<Int>("index")!!
         val configuration = device.getConfiguration(index)
-        val interfaces = List(configuration.interfaceCount) {
-          val usbInterface = configuration.getInterface(it)
-          mapOf(
-                  "id" to usbInterface.id,
-                  "alternateSetting" to usbInterface.alternateSetting
-          )
-        }
-        result.success(mapOf(
-                "id" to configuration.id,
-                "index" to index,
-                "interfaces" to interfaces
-        ))
+        val map = configuration.toMap() + ("index" to index)
+        result.success(map)
       }
       "setConfiguration" -> {
         val device = usbDevice ?: return result.error("IllegalState", "usbDevice null", null)
@@ -156,3 +143,19 @@ fun UsbDevice.findInterface(id: Int, alternateSetting: Int): UsbInterface? {
   }
   return null
 }
+
+fun UsbConfiguration.toMap() = mapOf(
+        "id" to id,
+        "interfaces" to List(interfaceCount) { getInterface(it).toMap() }
+)
+
+fun UsbInterface.toMap() = mapOf(
+        "id" to id,
+        "alternateSetting" to alternateSetting,
+        "endpoints" to List(endpointCount) { getEndpoint(it).toMap() }
+)
+
+fun UsbEndpoint.toMap() = mapOf(
+        "endpointNumber" to endpointNumber,
+        "direction" to direction
+)
