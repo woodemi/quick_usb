@@ -129,12 +129,22 @@ class QuickUsbPlugin : FlutterPlugin, MethodCallHandler {
         val usbInterface = device.findInterface(id, alternateSetting)
         result.success(connection.releaseInterface(usbInterface))
       }
+      "bulkTransferIn" -> {
+        val device = usbDevice ?: return result.error("IllegalState", "usbDevice null", null)
+        val connection = usbDeviceConnection ?: return result.error("IllegalState", "usbDeviceConnection null", null)
+        val endpointMap = call.argument<Map<String, Any>>("endpoint")!!
+        val maxLength = call.argument<Int>("maxLength")!!
+        val endpoint = device.findEndpoint(endpointMap["endpointNumber"] as Int, endpointMap["direction"] as Int)
+        val buffer = ByteArray(maxLength)
+        val actualLength = connection.bulkTransfer(endpoint, buffer, buffer.count(), 1000)
+        result.success(buffer.take(actualLength))
+      }
       "bulkTransferOut" -> {
         val device = usbDevice ?: return result.error("IllegalState", "usbDevice null", null)
         val connection = usbDeviceConnection ?: return result.error("IllegalState", "usbDeviceConnection null", null)
         val endpointMap = call.argument<Map<String, Any>>("endpoint")!!
         val data = call.argument<ByteArray>("data")!!
-        val endpoint = device.findEndpoint(endpointMap["endpointNumber"] as Int)
+        val endpoint = device.findEndpoint(endpointMap["endpointNumber"] as Int, endpointMap["direction"] as Int)
         val actualLength = connection.bulkTransfer(endpoint, data, data.count(), 1000)
         result.success(actualLength)
       }
@@ -153,12 +163,13 @@ fun UsbDevice.findInterface(id: Int, alternateSetting: Int): UsbInterface? {
   return null
 }
 
-fun UsbDevice.findEndpoint(endpointNumber: Int): UsbEndpoint? {
+fun UsbDevice.findEndpoint(endpointNumber: Int, direction: Int): UsbEndpoint? {
   for (i in 0..interfaceCount) {
     val usbInterface = getInterface(i)
     for (j in 0..usbInterface.endpointCount) {
-      if (usbInterface.getEndpoint(j).endpointNumber == endpointNumber) {
-        return usbInterface.getEndpoint(j)
+      val endpoint = usbInterface.getEndpoint(j)
+      if (endpoint.endpointNumber == endpointNumber && endpoint.direction == direction) {
+        return endpoint
       }
     }
   }

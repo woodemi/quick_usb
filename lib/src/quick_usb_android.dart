@@ -69,9 +69,15 @@ class QuickUsbAndroid extends QuickUsbPlatform {
   }
 
   @override
-  Future<Uint8List> bulkTransferIn(UsbEndpoint endpoint, int maxLength) {
-    // TODO: implement bulkTransferIn
-    throw UnimplementedError();
+  Future<Uint8List> bulkTransferIn(UsbEndpoint endpoint, int maxLength) async {
+    assert(endpoint.direction == UsbEndpoint.DIRECTION_IN,
+        'Endpoint\'s direction should be in');
+
+    List<dynamic> data = await _channel.invokeMethod('bulkTransferIn', {
+      'endpoint': endpoint.toMap(),
+      'maxLength': maxLength,
+    });
+    return Uint8List.fromList(data.cast<int>());
   }
 
   @override
