@@ -24,7 +24,9 @@ class QuickUsbMacos extends _QuickUsbDesktop {
 
 class QuickUsbLinux extends _QuickUsbDesktop {
   QuickUsbLinux() {
-    _libusb = Libusb(DynamicLibrary.open('libusb-1.0.23.so'));
+    // FIXME https://github.com/woodemi/quick_usb/issues/9#issuecomment-783138442
+    //  _libusb = Libusb(DynamicLibrary.open('./build/linux/debug/bundle/lib/libusb-1.0.23.so'));
+    _libusb = Libusb(DynamicLibrary.open('lib/libusb-1.0.23.so'));
   }
 }
 

@@ -6,7 +6,21 @@ import 'package:flutter/material.dart';
 import 'package:quick_usb/quick_usb.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MyHome());
+}
+
+class MyHome extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Plugin example app'),
+        ),
+        body: MyApp(),
+      ),
+    );
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -17,14 +31,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: _buildColumn(),
-      ),
-    );
+    return _buildColumn();
+  }
+
+  void log(String info) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(info)));
   }
 
   Widget _buildColumn() {
@@ -49,14 +60,14 @@ class _MyAppState extends State<MyApp> {
           child: Text('init'),
           onPressed: () async {
             var init = await QuickUsb.init();
-            print('init $init');
+            log('init $init');
           },
         ),
         RaisedButton(
           child: Text('exit'),
           onPressed: () async {
             await QuickUsb.exit();
-            print('exit');
+            log('exit');
           },
         ),
       ],
@@ -70,7 +81,7 @@ class _MyAppState extends State<MyApp> {
       child: Text('getDeviceList'),
       onPressed: () async {
         _deviceList = await QuickUsb.getDeviceList();
-        print('deviceList $_deviceList');
+        log('deviceList $_deviceList');
       },
     );
   }
@@ -83,14 +94,14 @@ class _MyAppState extends State<MyApp> {
           child: Text('hasPermission'),
           onPressed: () async {
             var hasPermission = await QuickUsb.hasPermission(_deviceList.first);
-            print('hasPermission $hasPermission');
+            log('hasPermission $hasPermission');
           },
         ),
         RaisedButton(
           child: Text('requestPermission'),
           onPressed: () async {
             await QuickUsb.requestPermission(_deviceList.first);
-            print('requestPermission');
+            log('requestPermission');
           },
         ),
       ],
@@ -105,14 +116,14 @@ class _MyAppState extends State<MyApp> {
           child: Text('openDevice'),
           onPressed: () async {
             var openDevice = await QuickUsb.openDevice(_deviceList.first);
-            print('openDevice $openDevice');
+            log('openDevice $openDevice');
           },
         ),
         RaisedButton(
           child: Text('closeDevice'),
           onPressed: () async {
             await QuickUsb.closeDevice();
-            print('closeDevice');
+            log('closeDevice');
           },
         ),
       ],
@@ -129,15 +140,15 @@ class _MyAppState extends State<MyApp> {
           child: Text('getConfiguration'),
           onPressed: () async {
             _configuration = await QuickUsb.getConfiguration(0);
-            print('getConfiguration $_configuration');
+            log('getConfiguration $_configuration');
           },
         ),
         RaisedButton(
           child: Text('setConfiguration'),
           onPressed: () async {
             var setConfiguration =
-            await QuickUsb.setConfiguration(_configuration);
-            print('setConfiguration $setConfiguration');
+                await QuickUsb.setConfiguration(_configuration);
+            log('setConfiguration $setConfiguration');
           },
         ),
       ],
@@ -152,16 +163,16 @@ class _MyAppState extends State<MyApp> {
           child: Text('claimInterface'),
           onPressed: () async {
             var claimInterface =
-            await QuickUsb.claimInterface(_configuration.interfaces[0]);
-            print('claimInterface $claimInterface');
+                await QuickUsb.claimInterface(_configuration.interfaces[0]);
+            log('claimInterface $claimInterface');
           },
         ),
         RaisedButton(
           child: Text('releaseInterface'),
           onPressed: () async {
             var releaseInterface =
-            await QuickUsb.releaseInterface(_configuration.interfaces[0]);
-            print('releaseInterface $releaseInterface');
+                await QuickUsb.releaseInterface(_configuration.interfaces[0]);
+            log('releaseInterface $releaseInterface');
           },
         ),
       ],
@@ -178,7 +189,7 @@ class _MyAppState extends State<MyApp> {
             var endpoint = _configuration.interfaces[0].endpoints
                 .firstWhere((e) => e.direction == UsbEndpoint.DIRECTION_IN);
             var bulkTransferIn = await QuickUsb.bulkTransferIn(endpoint, 1024);
-            print('bulkTransferIn ${hex.encode(bulkTransferIn)}');
+            log('bulkTransferIn ${hex.encode(bulkTransferIn)}');
           },
         ),
         RaisedButton(
@@ -188,8 +199,8 @@ class _MyAppState extends State<MyApp> {
             var endpoint = _configuration.interfaces[0].endpoints
                 .firstWhere((e) => e.direction == UsbEndpoint.DIRECTION_OUT);
             var bulkTransferOut =
-            await QuickUsb.bulkTransferOut(endpoint, data);
-            print('bulkTransferOut $bulkTransferOut');
+                await QuickUsb.bulkTransferOut(endpoint, data);
+            log('bulkTransferOut $bulkTransferOut');
           },
         ),
       ],
