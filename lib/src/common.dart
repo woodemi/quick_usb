@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class UsbDevice {
   final String identifier;
   final int vendorId;
@@ -7,10 +5,10 @@ class UsbDevice {
   final int configurationCount;
 
   UsbDevice({
-    @required this.identifier,
-    @required this.vendorId,
-    @required this.productId,
-    @required this.configurationCount,
+    required this.identifier,
+    required this.vendorId,
+    required this.productId,
+    required this.configurationCount,
   });
 
   factory UsbDevice.fromMap(Map<dynamic, dynamic> map) {
@@ -41,9 +39,9 @@ class UsbConfiguration {
   final List<UsbInterface> interfaces;
 
   UsbConfiguration({
-    @required this.id,
-    @required this.index,
-    @required this.interfaces,
+    required this.id,
+    required this.index,
+    required this.interfaces,
   });
 
   factory UsbConfiguration.fromMap(Map<dynamic, dynamic> map) {
@@ -75,9 +73,9 @@ class UsbInterface {
   final List<UsbEndpoint> endpoints;
 
   UsbInterface({
-    @required this.id,
-    @required this.alternateSetting,
-    @required this.endpoints,
+    required this.id,
+    required this.alternateSetting,
+    required this.endpoints,
   });
 
   factory UsbInterface.fromMap(Map<dynamic, dynamic> map) {
@@ -118,8 +116,8 @@ class UsbEndpoint {
   final int direction;
 
   UsbEndpoint({
-    @required this.endpointNumber,
-    @required this.direction,
+    required this.endpointNumber,
+    required this.direction,
   });
 
   factory UsbEndpoint.fromMap(Map<dynamic, dynamic> map) {
