@@ -3,6 +3,7 @@
 #include <flutter_linux/flutter_linux.h>
 #include <gtk/gtk.h>
 #include <sys/utsname.h>
+#include <glib.h>
 
 #include <cstring>
 
@@ -53,9 +54,21 @@ static void method_call_cb(FlMethodChannel* channel, FlMethodCall* method_call,
   quick_usb_plugin_handle_method_call(plugin, method_call);
 }
 
+static gchar* get_executable_dir() {
+  g_autoptr(GError) error = nullptr;
+  g_autofree gchar* exe_path = g_file_read_link("/proc/self/exe", &error);
+  if (exe_path == nullptr) {
+    g_critical("Failed to determine location of executable: %s", error->message);
+    return nullptr;
+  }
+  return g_path_get_dirname(exe_path);
+}
+
 void quick_usb_plugin_register_with_registrar(FlPluginRegistrar* registrar) {
   QuickUsbPlugin* plugin = QUICK_USB_PLUGIN(
       g_object_new(quick_usb_plugin_get_type(), nullptr));
+
+  setenv("EXE_DIR_PATH", get_executable_dir(), 0);
 
   g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
   g_autoptr(FlMethodChannel) channel =
