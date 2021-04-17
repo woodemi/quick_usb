@@ -21,13 +21,13 @@ class QuickUsbAndroid extends QuickUsbPlatform {
   @override
   Future<List<UsbDevice>> getDeviceList() async {
     List<Map<dynamic, dynamic>> list =
-        await _channel.invokeListMethod('getDeviceList');
+        (await _channel.invokeListMethod('getDeviceList'))!;
     return list.map((e) => UsbDevice.fromMap(e)).toList();
   }
 
   @override
-  Future<bool> hasPermission(UsbDevice usbDevice) {
-    return _channel.invokeMethod('hasPermission', usbDevice.toMap());
+  Future<bool> hasPermission(UsbDevice usbDevice) async {
+    return await _channel.invokeMethod('hasPermission', usbDevice.toMap());
   }
 
   @override
@@ -36,8 +36,8 @@ class QuickUsbAndroid extends QuickUsbPlatform {
   }
 
   @override
-  Future<bool> openDevice(UsbDevice usbDevice) {
-    return _channel.invokeMethod('openDevice', usbDevice.toMap());
+  Future<bool> openDevice(UsbDevice usbDevice) async {
+    return await _channel.invokeMethod('openDevice', usbDevice.toMap());
   }
 
   @override
@@ -54,18 +54,18 @@ class QuickUsbAndroid extends QuickUsbPlatform {
   }
 
   @override
-  Future<bool> setConfiguration(UsbConfiguration config) {
-    return _channel.invokeMethod('setConfiguration', config.toMap());
+  Future<bool> setConfiguration(UsbConfiguration config) async {
+    return await _channel.invokeMethod('setConfiguration', config.toMap());
   }
 
   @override
-  Future<bool> claimInterface(UsbInterface intf) {
-    return _channel.invokeMethod('claimInterface', intf.toMap());
+  Future<bool> claimInterface(UsbInterface intf) async {
+    return await _channel.invokeMethod('claimInterface', intf.toMap());
   }
 
   @override
-  Future<bool> releaseInterface(UsbInterface intf) {
-    return _channel.invokeMethod('releaseInterface', intf.toMap());
+  Future<bool> releaseInterface(UsbInterface intf) async {
+    return await _channel.invokeMethod('releaseInterface', intf.toMap());
   }
 
   @override
@@ -81,11 +81,11 @@ class QuickUsbAndroid extends QuickUsbPlatform {
   }
 
   @override
-  Future<int> bulkTransferOut(UsbEndpoint endpoint, Uint8List data) {
+  Future<int> bulkTransferOut(UsbEndpoint endpoint, Uint8List data) async {
     assert(endpoint.direction == UsbEndpoint.DIRECTION_OUT,
         'Endpoint\'s direction should be out');
 
-    return _channel.invokeMethod('bulkTransferOut', {
+    return await _channel.invokeMethod('bulkTransferOut', {
       'endpoint': endpoint.toMap(),
       'data': data,
     });

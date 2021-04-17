@@ -8,7 +8,7 @@ abstract class QuickUsbPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static QuickUsbPlatform _instance;
+  static late QuickUsbPlatform _instance;
 
   /// The default instance of [PathProviderPlatform] to use.
   ///
