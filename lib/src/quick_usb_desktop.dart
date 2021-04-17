@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart' as ffi;
@@ -24,9 +25,7 @@ class QuickUsbMacos extends _QuickUsbDesktop {
 
 class QuickUsbLinux extends _QuickUsbDesktop {
   QuickUsbLinux() {
-    // FIXME https://github.com/woodemi/quick_usb/issues/9#issuecomment-783138442
-    //  _libusb = Libusb(DynamicLibrary.open('./build/linux/debug/bundle/lib/libusb-1.0.23.so'));
-    _libusb = Libusb(DynamicLibrary.open('lib/libusb-1.0.23.so'));
+    _libusb = Libusb(DynamicLibrary.open('${Platform.environment['EXE_DIR_PATH']}/lib/libusb-1.0.23.so'));
   }
 }
 
