@@ -1,3 +1,7 @@
+## 0.2.0
+
+- Migrate to null safety
+
 ## 0.1.0+2
 
 - Fix bulkTransferOut length limit on Android
