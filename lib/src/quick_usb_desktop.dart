@@ -25,7 +25,7 @@ class QuickUsbMacos extends _QuickUsbDesktop {
 
 class QuickUsbLinux extends _QuickUsbDesktop {
   QuickUsbLinux() {
-    _libusb = Libusb(DynamicLibrary.open('${Platform.environment['EXE_DIR_PATH']}/lib/libusb-1.0.23.so'));
+    _libusb = Libusb(DynamicLibrary.open('${File(Platform.resolvedExecutable).parent.path}/lib/libusb-1.0.23.so'));
   }
 }
 
