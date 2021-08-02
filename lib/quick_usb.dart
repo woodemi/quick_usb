@@ -56,6 +56,9 @@ class QuickUsb {
   static Future<bool> setConfiguration(UsbConfiguration config) =>
       _platform.setConfiguration(config);
 
+  static Future<bool> detachKernelDriver(UsbInterface intf) =>
+      _platform.detachKernelDriver(intf);
+
   static Future<bool> claimInterface(UsbInterface intf) =>
       _platform.claimInterface(intf);
 

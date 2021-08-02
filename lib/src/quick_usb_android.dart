@@ -59,6 +59,11 @@ class QuickUsbAndroid extends QuickUsbPlatform {
   }
 
   @override
+  Future<bool> detachKernelDriver(UsbInterface intf) async {
+    return true;
+  }
+
+  @override
   Future<bool> claimInterface(UsbInterface intf) async {
     return await _channel.invokeMethod('claimInterface', intf.toMap());
   }
