@@ -42,6 +42,8 @@ abstract class QuickUsbPlatform extends PlatformInterface {
 
   Future<bool> claimInterface(UsbInterface intf);
 
+  Future<bool> detachKernelDriver(UsbInterface intf);
+
   Future<bool> releaseInterface(UsbInterface intf);
 
   Future<Uint8List> bulkTransferIn(UsbEndpoint endpoint, int maxLength);

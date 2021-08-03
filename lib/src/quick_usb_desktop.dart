@@ -182,6 +182,14 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
   }
 
   @override
+  Future<bool> detachKernelDriver(UsbInterface intf) async {
+    assert(_devHandle != null, 'Device not open');
+
+    var result = _libusb.libusb_detach_kernel_driver(_devHandle!, intf.id);
+    return result == libusb_error.LIBUSB_SUCCESS;
+  }
+
+  @override
   Future<bool> claimInterface(UsbInterface intf) async {
     assert(_devHandle != null, 'Device not open');
 
