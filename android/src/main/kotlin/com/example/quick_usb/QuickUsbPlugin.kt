@@ -156,6 +156,26 @@ class QuickUsbPlugin : FlutterPlugin, MethodCallHandler {
         }
         result.success(sum)
       }
+      "getDeviceDescription" -> {
+        var hashMap : HashMap<String, String?> = HashMap()
+        hashMap.put("manufacturer", null);
+        hashMap.put("product", null);
+        hashMap.put("serialNumber", null);
+        val context = applicationContext ?: return result.error("IllegalState", "applicationContext null", null)
+        val manager = usbManager ?: return result.error("IllegalState", "usbManager null", null)
+        val identifier = call.argument<String>("identifier")
+        val device = manager.deviceList[identifier] ?: return result.error("IllegalState", "usbDevice null", null)
+        if (!manager.hasPermission(device)) {
+          context.registerReceiver(receiver, IntentFilter(ACTION_USB_PERMISSION))
+          manager.requestPermission(device, pendingPermissionIntent(context))
+        }
+        if (manager.hasPermission(device)) {
+          hashMap["manufacturer"] = device.manufacturerName;
+          hashMap["product"] = device.productName;
+          hashMap["serialNumber"] = device.serialNumber;
+        }
+        return result.success(hashMap);
+      }
       else -> result.notImplemented()
     }
   }

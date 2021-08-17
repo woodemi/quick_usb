@@ -71,4 +71,11 @@ class QuickUsb {
 
   static Future<int> bulkTransferOut(UsbEndpoint endpoint, Uint8List data) =>
       _platform.bulkTransferOut(endpoint, data);
+
+  static Future<UsbDeviceDescription> getDeviceDescription(
+          UsbDevice usbDevice) =>
+      _platform.getDeviceDescription(usbDevice);
+
+  static Future<List<UsbDeviceDescription>> getDevicesWithDescription() =>
+      _platform.getDevicesWithDescription();
 }

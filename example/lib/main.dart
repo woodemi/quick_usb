@@ -43,6 +43,8 @@ class _MyAppState extends State<MyApp> {
       children: [
         _init_exit(),
         _getDeviceList(),
+        _getDevicesWithDescription(),
+        _getDeviceDescription(),
         _has_request(),
         _open_close(),
         _get_set_configuration(),
@@ -204,6 +206,28 @@ class _MyAppState extends State<MyApp> {
           },
         ),
       ],
+    );
+  }
+
+  Widget _getDevicesWithDescription() {
+    return RaisedButton(
+      child: Text('getDevicesWithDescription'),
+      onPressed: () async {
+        var descriptions = await QuickUsb.getDevicesWithDescription();
+        _deviceList = descriptions.map((e) => e.device).toList();
+        log('descriptions $descriptions');
+      },
+    );
+  }
+
+  Widget _getDeviceDescription() {
+    return RaisedButton(
+      child: Text('getDeviceDescription'),
+      onPressed: () async {
+        var description =
+            await QuickUsb.getDeviceDescription(_deviceList.first);
+        log('description ${description.toMap()}');
+      },
     );
   }
 }
