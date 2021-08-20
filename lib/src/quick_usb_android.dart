@@ -95,4 +95,26 @@ class QuickUsbAndroid extends QuickUsbPlatform {
       'data': data,
     });
   }
+
+  @override
+  Future<UsbDeviceDescription> getDeviceDescription(UsbDevice usbDevice) async {
+    var result =
+        await _channel.invokeMethod('getDeviceDescription', usbDevice.toMap());
+    return UsbDeviceDescription(
+      device: usbDevice,
+      manufacturer: result['manufacturer'],
+      product: result['product'],
+      serialNumber: result['serialNumber'],
+    );
+  }
+
+  @override
+  Future<List<UsbDeviceDescription>> getDevicesWithDescription() async {
+    var devices = await getDeviceList();
+    var result = <UsbDeviceDescription>[];
+    for (var device in devices) {
+      result.add(await getDeviceDescription(device));
+    }
+    return result;
+  }
 }

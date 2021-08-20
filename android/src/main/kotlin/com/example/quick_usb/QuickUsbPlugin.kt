@@ -156,6 +156,37 @@ class QuickUsbPlugin : FlutterPlugin, MethodCallHandler {
         }
         result.success(sum)
       }
+      "getDeviceDescription" -> {
+        val context = applicationContext ?: return result.error("IllegalState", "applicationContext null", null)
+        val manager = usbManager ?: return result.error("IllegalState", "usbManager null", null)
+        val identifier = call.argument<String>("identifier")
+        val device = manager.deviceList[identifier] ?: return result.error("IllegalState", "usbDevice null", null)
+        if (!manager.hasPermission(device)) {
+          val permissionReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+              context.unregisterReceiver(this)
+              val granted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
+              if (!granted) {
+                result.success(mapOf<String, String?>())
+              } else {
+                result.success(mapOf<String, String?>(
+                        "manufacturer" to device.manufacturerName,
+                        "product" to device.productName,
+                        "serialNumber" to device.serialNumber
+                ))
+              }
+            }
+          }
+          context.registerReceiver(permissionReceiver, IntentFilter(ACTION_USB_PERMISSION))
+          manager.requestPermission(device, pendingPermissionIntent(context))
+        } else {
+          result.success(mapOf<String, String?>(
+                  "manufacturer" to device.manufacturerName,
+                  "product" to device.productName,
+                  "serialNumber" to device.serialNumber
+          ))
+        }
+      }
       else -> result.notImplemented()
     }
   }

@@ -49,4 +49,8 @@ abstract class QuickUsbPlatform extends PlatformInterface {
   Future<Uint8List> bulkTransferIn(UsbEndpoint endpoint, int maxLength);
 
   Future<int> bulkTransferOut(UsbEndpoint endpoint, Uint8List data);
+
+  Future<UsbDeviceDescription> getDeviceDescription(UsbDevice usbDevice);
+
+  Future<List<UsbDeviceDescription>> getDevicesWithDescription();
 }
