@@ -1,3 +1,11 @@
+## 0.3.0
+
+- Add `getDevicesWithDescription`
+- Add `getDeviceDescription`
+- Add `detachKernelDriver`
+- [Fix `dylib` @rpath on macOS](https://github.com/woodemi/quick_usb/issues/23)
+- Refactor linux so loading
+
 ## 0.2.0
 
 - Migrate to null safety
