@@ -271,31 +271,28 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
     String? serialNumber;
     var descPtr = ffi.calloc<libusb_device_descriptor>();
     try {
-      if (descPtr != nullptr) {
-        var handle = _libusb.libusb_open_device_with_vid_pid(
-            nullptr, usbDevice.vendorId, usbDevice.productId);
-        if (handle != nullptr) {
-          var device = _libusb.libusb_get_device(handle);
-          if (device != nullptr) {
-            var getDesc =
-                _libusb.libusb_get_device_descriptor(device, descPtr) ==
-                    libusb_error.LIBUSB_SUCCESS;
-            if (getDesc) {
-              if (descPtr.ref.iManufacturer > 0) {
-                manufacturer =
-                    _getStringDescriptor(handle, descPtr.ref.iManufacturer);
-              }
-              if (descPtr.ref.iProduct > 0) {
-                product = _getStringDescriptor(handle, descPtr.ref.iProduct);
-              }
-              if (descPtr.ref.iSerialNumber > 0) {
-                serialNumber =
-                    _getStringDescriptor(handle, descPtr.ref.iSerialNumber);
-              }
-              _libusb.libusb_close(handle);
+      var handle = _libusb.libusb_open_device_with_vid_pid(
+          nullptr, usbDevice.vendorId, usbDevice.productId);
+      if (handle != nullptr) {
+        var device = _libusb.libusb_get_device(handle);
+        if (device != nullptr) {
+          var getDesc = _libusb.libusb_get_device_descriptor(device, descPtr) ==
+              libusb_error.LIBUSB_SUCCESS;
+          if (getDesc) {
+            if (descPtr.ref.iManufacturer > 0) {
+              manufacturer =
+                  _getStringDescriptorASCII(handle, descPtr.ref.iManufacturer);
+            }
+            if (descPtr.ref.iProduct > 0) {
+              product = _getStringDescriptorASCII(handle, descPtr.ref.iProduct);
+            }
+            if (descPtr.ref.iSerialNumber > 0) {
+              serialNumber =
+                  _getStringDescriptorASCII(handle, descPtr.ref.iSerialNumber);
             }
           }
         }
+        _libusb.libusb_close(handle);
       }
     } finally {
       ffi.calloc.free(descPtr);
@@ -307,10 +304,10 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
         serialNumber: serialNumber);
   }
 
-  String? _getStringDescriptor(
+  String? _getStringDescriptorASCII(
       Pointer<libusb_device_handle> handle, int descIndex) {
     String? result;
-    Pointer<ffi.Utf8> string = ffi.malloc<Uint8>(256).cast();
+    Pointer<ffi.Utf8> string = ffi.calloc<Uint8>(256).cast();
     try {
       var ret = _libusb.libusb_get_string_descriptor_ascii(
           handle, descIndex, string.cast(), 256);
