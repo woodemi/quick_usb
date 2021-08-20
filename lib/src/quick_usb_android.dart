@@ -117,4 +117,7 @@ class QuickUsbAndroid extends QuickUsbPlatform {
     }
     return result;
   }
+
+  @override
+  Future<void> setAutoDetachKernelDriver(bool enable) async {}
 }

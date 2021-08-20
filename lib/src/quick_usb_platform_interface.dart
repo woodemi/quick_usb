@@ -53,4 +53,6 @@ abstract class QuickUsbPlatform extends PlatformInterface {
   Future<UsbDeviceDescription> getDeviceDescription(UsbDevice usbDevice);
 
   Future<List<UsbDeviceDescription>> getDevicesWithDescription();
+
+  Future<void> setAutoDetachKernelDriver(bool enable);
 }

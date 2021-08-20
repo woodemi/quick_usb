@@ -329,4 +329,12 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
     }
     return result;
   }
+
+  @override
+  Future<void> setAutoDetachKernelDriver(bool enable) async {
+    assert(_devHandle != null, 'Device not open');
+    if (Platform.isLinux) {
+      _libusb.libusb_set_auto_detach_kernel_driver(_devHandle!, enable ? 1 : 0);
+    }
+  }
 }
