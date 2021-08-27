@@ -12,6 +12,7 @@ A cross-platform (Android/Windows/macOS/Linux) USB plugin for Flutter
 - [Get/Set configuration](#getset-configuration)
 - [Claim/Release interface](#claimrelease-interface)
 - [Bulk transfer in/out](#bulk-transfer-inout)
+- [Set auto detach kernel driver](#set-auto-detach-kernel-driver)
 
 ### List devices
 
@@ -98,4 +99,16 @@ print('bulkTransferIn ${hex.encode(bulkTransferIn)}');
 // ...
 var bulkTransferOut = await QuickUsb.bulkTransferOut(endpoint, data);
 print('bulkTransferOut $bulkTransferOut');
+```
+
+### Set auto detach kernel driver
+
+Enable/disable libusb's automatic kernel driver detachment on linux. When this is enabled libusb will automatically detach the kernel driver on an interface when claiming the interface, and attach it when releasing the interface.
+
+Automatic kernel driver detachment is disabled on newly opened device handles by default.
+
+This is supported only on linux, on other platforms this function does nothing.
+
+```dart
+await QuickUsb.setAutoDetachKernelDriver(true);
 ```

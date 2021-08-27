@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
@@ -45,6 +46,7 @@ class _MyAppState extends State<MyApp> {
         _getDeviceList(),
         _getDevicesWithDescription(),
         _getDeviceDescription(),
+        if (Platform.isLinux) _setAutoDetachKernelDriver(),
         _has_request(),
         _open_close(),
         _get_set_configuration(),
@@ -227,6 +229,18 @@ class _MyAppState extends State<MyApp> {
         var description =
             await QuickUsb.getDeviceDescription(_deviceList.first);
         log('description ${description.toMap()}');
+      },
+    );
+  }
+
+  bool _autoDetachEnabled = false;
+  Widget _setAutoDetachKernelDriver() {
+    return RaisedButton(
+      child: Text('setAutoDetachKernelDriver'),
+      onPressed: () async {
+        await QuickUsb.setAutoDetachKernelDriver(!_autoDetachEnabled);
+        _autoDetachEnabled = !_autoDetachEnabled;
+        log('setAutoDetachKernelDriver: $_autoDetachEnabled');
       },
     );
   }

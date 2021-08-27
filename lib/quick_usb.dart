@@ -78,4 +78,7 @@ class QuickUsb {
 
   static Future<List<UsbDeviceDescription>> getDevicesWithDescription() =>
       _platform.getDevicesWithDescription();
+
+  static Future<void> setAutoDetachKernelDriver(bool enable) =>
+      _platform.setAutoDetachKernelDriver(enable);
 }
