@@ -150,7 +150,7 @@ class QuickUsbPlugin : FlutterPlugin, MethodCallHandler {
         val dataSplit = data.asList().windowed(16384, 16384, true).map { it.toByteArray() }
         var sum = 0
         for (bytes in dataSplit) {
-          val actualLength = connection.bulkTransfer(endpoint, bytes, bytes.count(), 1000)
+          val actualLength = connection.bulkTransfer(endpoint, bytes, bytes.count(), 10000)
           if (actualLength < 0) break
           sum += actualLength
         }
