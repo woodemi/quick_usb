@@ -134,10 +134,11 @@ class QuickUsbPlugin : FlutterPlugin, MethodCallHandler {
         val connection = usbDeviceConnection ?: return result.error("IllegalState", "usbDeviceConnection null", null)
         val endpointMap = call.argument<Map<String, Any>>("endpoint")!!
         val maxLength = call.argument<Int>("maxLength")!!
+        val timeout = call.argument<Int>("timeout")!!
         val endpoint = device.findEndpoint(endpointMap["endpointNumber"] as Int, endpointMap["direction"] as Int)
         // TODO Check [UsbDeviceConnection.bulkTransfer] API
         val buffer = ByteArray(maxLength)
-        val actualLength = connection.bulkTransfer(endpoint, buffer, buffer.count(), 1000)
+        val actualLength = connection.bulkTransfer(endpoint, buffer, buffer.count(), timeout)
         result.success(buffer.take(actualLength))
       }
       "bulkTransferOut" -> {
@@ -145,12 +146,13 @@ class QuickUsbPlugin : FlutterPlugin, MethodCallHandler {
         val connection = usbDeviceConnection ?: return result.error("IllegalState", "usbDeviceConnection null", null)
         val endpointMap = call.argument<Map<String, Any>>("endpoint")!!
         val data = call.argument<ByteArray>("data")!!
+        val timeout = call.argument<Int>("timeout")!!
         val endpoint = device.findEndpoint(endpointMap["endpointNumber"] as Int, endpointMap["direction"] as Int)
         // Check [UsbDeviceConnection.bulkTransfer] API
         val dataSplit = data.asList().windowed(16384, 16384, true).map { it.toByteArray() }
         var sum = 0
         for (bytes in dataSplit) {
-          val actualLength = connection.bulkTransfer(endpoint, bytes, bytes.count(), 10000)
+          val actualLength = connection.bulkTransfer(endpoint, bytes, bytes.count(), timeout)
           if (actualLength < 0) break
           sum += actualLength
         }

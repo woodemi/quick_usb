@@ -1,6 +1,6 @@
 name: quick_usb
 description: A cross-platform USB plugin for Flutter
-version: 0.3.0
+version: 0.3.1
 homepage: https://github.com/woodemi/quick_usb
 
 environment:
