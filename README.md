@@ -94,10 +94,10 @@ print('releaseInterface $releaseInterface');
 ### Bulk transfer in/out
 
 ```dart
-var bulkTransferIn = await QuickUsb.bulkTransferIn(endpoint, 1024);
+var bulkTransferIn = await QuickUsb.bulkTransferIn(endpoint, 1024, timeout: 2000);
 print('bulkTransferIn ${hex.encode(bulkTransferIn)}');
 // ...
-var bulkTransferOut = await QuickUsb.bulkTransferOut(endpoint, data);
+var bulkTransferOut = await QuickUsb.bulkTransferOut(endpoint, data, timeout: 2000);
 print('bulkTransferOut $bulkTransferOut');
 ```
 

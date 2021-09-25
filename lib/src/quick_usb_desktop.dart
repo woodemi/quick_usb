@@ -207,7 +207,8 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
   }
 
   @override
-  Future<Uint8List> bulkTransferIn(UsbEndpoint endpoint, int maxLength) async {
+  Future<Uint8List> bulkTransferIn(
+      UsbEndpoint endpoint, int maxLength, int timeout) async {
     assert(_devHandle != null, 'Device not open');
     assert(endpoint.direction == UsbEndpoint.DIRECTION_IN,
         'Endpoint\'s direction should be in');
@@ -221,7 +222,7 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
         dataPtr,
         maxLength,
         actualLengthPtr,
-        1000,
+        timeout,
       );
 
       if (result != libusb_error.LIBUSB_SUCCESS) {
@@ -235,7 +236,8 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
   }
 
   @override
-  Future<int> bulkTransferOut(UsbEndpoint endpoint, Uint8List data) async {
+  Future<int> bulkTransferOut(
+      UsbEndpoint endpoint, Uint8List data, int timemout) async {
     assert(_devHandle != null, 'Device not open');
     assert(endpoint.direction == UsbEndpoint.DIRECTION_OUT,
         'Endpoint\'s direction should be out');
@@ -250,7 +252,7 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
         dataPtr,
         data.length,
         actualLengthPtr,
-        1000,
+        timemout,
       );
 
       if (result != libusb_error.LIBUSB_SUCCESS) {
