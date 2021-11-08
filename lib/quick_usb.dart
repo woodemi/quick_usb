@@ -33,7 +33,8 @@ QuickUsbPlatform get _platform {
 }
 
 class QuickUsb {
-  static Future<bool> init() => _platform.init();
+  static Future<bool> init({QuickUsbWindowConfig? window}) =>
+      _platform.init(window: window);
 
   static Future<void> exit() => _platform.exit();
 

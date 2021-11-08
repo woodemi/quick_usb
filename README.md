@@ -5,6 +5,7 @@ A cross-platform (Android/Windows/macOS/Linux) USB plugin for Flutter
 ## Usage
 
 - [List devices](#list-devices)
+  - [Note for window](#note-for-window)
 - [List devices with additional description](#list-devices-with-additional-description)
 - [Get device description](#get-device-description)
 - [Check/Request permission](#checkrequest-permission)
@@ -22,6 +23,13 @@ await QuickUsb.init();
 var deviceList = await QuickUsb.getDeviceList();
 // ...
 await QuickUsb.exit();
+```
+
+#### Note for window
+
+libusb can utilize [USBDK](https://github.com/libusb/libusb/wiki/Windows#how-to-use-libusb-on-windows) backend to open an USB port. This allow user to skip driver installation. However, user machine are required to install UsbDk on the window device, the installer can be found on the [github release](https://github.com/daynix/UsbDk/releases)
+```dart
+await QuickUsb.init(window: QuickUsbWindowConfig(useUsbdk: true));
 ```
 
 ### List devices with additional description

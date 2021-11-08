@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
 import 'package:quick_usb/src/common.dart';
 
 abstract class QuickUsbPlatform extends PlatformInterface {
@@ -22,7 +23,7 @@ abstract class QuickUsbPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<bool> init();
+  Future<bool> init({QuickUsbWindowConfig? window});
 
   Future<void> exit();
 
@@ -46,9 +47,11 @@ abstract class QuickUsbPlatform extends PlatformInterface {
 
   Future<bool> releaseInterface(UsbInterface intf);
 
-  Future<Uint8List> bulkTransferIn(UsbEndpoint endpoint, int maxLength, int timeout);
+  Future<Uint8List> bulkTransferIn(
+      UsbEndpoint endpoint, int maxLength, int timeout);
 
-  Future<int> bulkTransferOut(UsbEndpoint endpoint, Uint8List data, int timeout);
+  Future<int> bulkTransferOut(
+      UsbEndpoint endpoint, Uint8List data, int timeout);
 
   Future<UsbDeviceDescription> getDeviceDescription(UsbDevice usbDevice);
 

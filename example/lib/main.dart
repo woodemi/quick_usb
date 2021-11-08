@@ -63,7 +63,8 @@ class _MyAppState extends State<MyApp> {
         RaisedButton(
           child: Text('init'),
           onPressed: () async {
-            var init = await QuickUsb.init();
+            var init = await QuickUsb.init(
+                window: QuickUsbWindowConfig(useUsbdk: true));
             log('init $init');
           },
         ),
