@@ -4,8 +4,8 @@ version: 0.3.1
 homepage: https://github.com/woodemi/quick_usb
 
 environment:
-  sdk: ">=2.12.0-259.9.beta <3.0.0"
-  flutter: ">=1.22.0"
+  sdk: ">=2.13.0 <3.0.0"
+  flutter: ">=2.2.0"
 
 dependencies:
   flutter:

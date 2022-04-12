@@ -1,5 +1,8 @@
 ## 0.3.1
-- Add bulkTransferIn,bulkTransferOut timeout parameter.
+
+- Add `setAutoDetachKernelDriver`
+- Remove USB feature requirement for Android devices
+- Add `timeout` parameter to `bulkTransferIn` & `bulkTransferOut`
 
 ## 0.3.0
 
