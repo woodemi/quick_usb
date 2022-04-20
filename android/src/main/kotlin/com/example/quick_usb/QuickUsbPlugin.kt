@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.hardware.usb.*
+import android.os.Build
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
@@ -15,7 +16,14 @@ import io.flutter.plugin.common.MethodChannel.Result
 
 private const val ACTION_USB_PERMISSION = "com.example.quick_usb.USB_PERMISSION"
 
-private fun pendingPermissionIntent(context: Context) = PendingIntent.getBroadcast(context, 0, Intent(ACTION_USB_PERMISSION), 0)
+private val pendingIntentFlag = 
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT 
+  } else {
+    PendingIntent.FLAG_UPDATE_CURRENT
+  }
+
+private fun pendingPermissionIntent(context: Context) = PendingIntent.getBroadcast(context, 0, Intent(ACTION_USB_PERMISSION), pendingIntentFlag)
 
 /** QuickUsbPlugin */
 class QuickUsbPlugin : FlutterPlugin, MethodCallHandler {
