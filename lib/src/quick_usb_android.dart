@@ -9,7 +9,7 @@ const MethodChannel _channel = const MethodChannel('quick_usb');
 
 class QuickUsbAndroid extends QuickUsbPlatform {
   @override
-  Future<bool> init() async {
+  Future<bool> init({QuickUsbWindowConfig? window}) async {
     return true;
   }
 

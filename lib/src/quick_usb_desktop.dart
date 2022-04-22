@@ -32,14 +32,26 @@ class QuickUsbLinux extends _QuickUsbDesktop {
 
 class _QuickUsbDesktop extends QuickUsbPlatform {
   Pointer<libusb_device_handle>? _devHandle;
+  Pointer<Pointer<libusb_context>>? ctxPointer;
 
   @override
-  Future<bool> init() async {
+  Future<bool> init({QuickUsbWindowConfig? window}) async {
+    if (window != null) {
+      if (window.useUsbdk == true) {
+        ctxPointer = ffi.calloc<Pointer<libusb_context>>();
+        _libusb.libusb_init(ctxPointer!);
+        _libusb.libusb_set_option(
+            ctxPointer!.value, libusb_option.LIBUSB_OPTION_USE_USBDK);
+      }
+    }
     return _libusb.libusb_init(nullptr) == libusb_error.LIBUSB_SUCCESS;
   }
 
   @override
   Future<void> exit() async {
+    if (ctxPointer != null) {
+      ffi.calloc.free(ctxPointer!);
+    }
     return _libusb.libusb_exit(nullptr);
   }
 

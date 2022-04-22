@@ -174,3 +174,10 @@ class UsbDeviceDescription {
   @override
   String toString() => toMap().toString();
 }
+
+class QuickUsbWindowConfig {
+  bool useUsbdk;
+  QuickUsbWindowConfig({
+    required this.useUsbdk,
+  });
+}
