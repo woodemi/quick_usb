@@ -30,12 +30,16 @@ Returns devices list with manufacturer, product and serial number description.
 
 Any of these attributes can be null.
 
-On Android user will be asked for permission for each device if needed.
-
 ```dart
 var descriptions = await QuickUsb.getDevicesWithDescription();
 var deviceList = descriptions.map((e) => e.device).toList();
 print('descriptions $descriptions');
+```
+
+**(Android Only)** Android requires permission for each device in order to get the serial number. The user will be asked
+for permission for each device if needed. If you do not require the serial number, you can avoid requesting permission using:
+```dart
+var descriptions = await QuickUsb.getDevicesWithDescription(requestPermission: false);
 ```
 
 ### Get device description
@@ -44,11 +48,15 @@ Returns manufacturer, product and serial number description for specified device
 
 Any of these attributes can be null.
 
-On Android user will be asked for permission if needed.
-
 ```dart
  var description = await QuickUsb.getDeviceDescription(device);
  print('description ${description.toMap()}');
+```
+
+**(Android Only)** Android requires permission for each device in order to get the serial number. The user will be asked
+for permission for each device if needed. If you do not require the serial number, you can avoid requesting permission using:
+```dart
+var description = await QuickUsb.getDeviceDescription(requestPermission: false);
 ```
 
 ### Check/Request permission
