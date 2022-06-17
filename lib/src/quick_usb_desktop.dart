@@ -83,7 +83,9 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
   }
 
   @override
-  Future<List<UsbDeviceDescription>> getDevicesWithDescription({bool requestPermission = true}) async {
+  Future<List<UsbDeviceDescription>> getDevicesWithDescription({
+    bool requestPermission = true,
+  }) async {
     var devices = await getDeviceList();
     var result = <UsbDeviceDescription>[];
     for (var device in devices) {
@@ -93,7 +95,10 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
   }
 
   @override
-  Future<UsbDeviceDescription> getDeviceDescription(UsbDevice usbDevice, {bool requestPermission = true}) async {
+  Future<UsbDeviceDescription> getDeviceDescription(
+    UsbDevice usbDevice, {
+    bool requestPermission = true,
+  }) async {
     String? manufacturer;
     String? product;
     String? serialNumber;
@@ -154,8 +159,8 @@ class _QuickUsbDesktop extends QuickUsbPlatform {
   }
 
   @override
-  Future<void> requestPermission(UsbDevice usbDevice) async {
-    return;
+  Future<bool> requestPermission(UsbDevice usbDevice) async {
+    return true;
   }
 
   @override
