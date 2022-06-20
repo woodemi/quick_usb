@@ -1,3 +1,7 @@
+# DEPRECATED
+
+This repo is deprecated; please use the new mono repo https://github.com/woodemi/quick.flutter
+
 # quick_usb
 
 A cross-platform (Android/Windows/macOS/Linux) USB plugin for Flutter
